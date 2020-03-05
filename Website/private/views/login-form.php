@@ -1,11 +1,19 @@
-<form action="dashboard-user.php">
+<?
+if (isset($_SESSION["user_type"])) {  
+    header("Location: index.php");
+    die();
+}
+?>
+
+
+<form action="private/src/authenticate.php" method="POST">
     <div class="input-field">
-        <input id="username" type="text" required>
+        <input id="username" name="username" type="text" required>
         <label for="username">Username</label>
     </div>
 
     <div class="input-field">
-        <input id="password" type="password" required>
+        <input id="password" name="password" type="password" required>
         <label for="password">Password</label>
     </div>
 

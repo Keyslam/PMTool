@@ -11,30 +11,17 @@
 </head>
 
 <body>
-    <?
-    $active_page = "active-game"; 
+    <? 
+    $active_page = "dashboard-admin-home";
     include("private/views/nav-bar.php"); 
     ?>
     
     <div class="row">
-        <? for ($i = 0; $i < 5; $i++) { ?>
-            <div class="col s4">
-                <? 
-                $tableCardName = $i;
-                include("private/views/table-card.php");  
-                ?>
-            </div>
-        <? } ?>        
+        <div class="col s4 offset-s4">
+            <h1>You are logged in as Admin</h1>
+        </div>
     </div>
-
-    <div class="row">
-        <? for ($x = 0; $x < 5; $x++) { ?>
-            <div class="col s12">
-                <? include("private/views/chip-value.php"); ?>
-            </div>
-        <? } ?>      
-    </div>
-
+    
     <!--JavaScript at end of body for optimized loading-->
     <script type="text/javascript" src="js/materialize.min.js"></script>
 </body>

@@ -11,7 +11,10 @@
 </head>
 
 <body>
-    <? include("private/views/nav-bar-main-page.php"); ?>
+    <? 
+    $active_page = "home";
+    include("private/views/nav-bar.php"); 
+    ?>
     
     <div class="row">
         <div class="col s4 offset-s4">

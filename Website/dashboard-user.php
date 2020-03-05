@@ -11,11 +11,14 @@
 </head>
 
 <body>
-    <? include("private/views/nav-bar-user.php"); ?>
+    <? 
+    $active_page = "dashboard-user-home";
+    include("private/views/nav-bar.php"); 
+    ?>
     
     <div class="row">
         <div class="col s4 offset-s4">
-
+            <h1>You are logged in as User</h1>
         </div>
     </div>
     
