@@ -14,9 +14,12 @@
     <? include("modules/nav-bar-main-page.php"); ?>
     
     <div class="row">
-        <? for ($x = 0; $x < 5; $x++) { ?>
+        <? for ($i = 0; $i < 5; $i++) { ?>
             <div class="col s4">
-                <? include("modules/table-card.php");  ?>
+                <? 
+                $tableCardName = $i;
+                include("modules/table-card.php");  
+                ?>
             </div>
         <? } ?>        
     </div>
