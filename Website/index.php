@@ -11,11 +11,11 @@
 </head>
 
 <body>
-    <? include("modules/nav-bar-main-page.php"); ?>
+    <? include("private/views/nav-bar-main-page.php"); ?>
     
     <div class="row">
         <div class="col s4 offset-s4">
-            <? include("modules/game-rules.php"); ?>
+            <? include("private/views/game-rules.php"); ?>
         </div>
     </div>
     

@@ -11,14 +11,14 @@
 </head>
 
 <body>
-    <? include("modules/nav-bar-main-page.php"); ?>
+    <? include("private/views/nav-bar-main-page.php"); ?>
     
     <div class="row">
         <? for ($i = 0; $i < 5; $i++) { ?>
             <div class="col s4">
                 <? 
                 $tableCardName = $i;
-                include("modules/table-card.php");  
+                include("private/views/table-card.php");  
                 ?>
             </div>
         <? } ?>        
@@ -27,7 +27,7 @@
     <div class="row">
         <? for ($x = 0; $x < 5; $x++) { ?>
             <div class="col s12">
-                <? include("modules/chip-value.php");  ?>
+                <? include("private/views/chip-value.php"); ?>
             </div>
         <? } ?>      
     </div>
