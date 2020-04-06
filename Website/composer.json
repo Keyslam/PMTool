@@ -1,0 +1,10 @@
+{
+    "name": "hboict-a2/pmtool",
+    "type": "project",
+    "require": {
+        "eftec/pdoone": "^1.23",
+        "eftec/bladeone": "^3.37",
+        "eftec/routeone": "^1.9"
+    },
+    "license": "MIT"
+}

@@ -1,4 +1,7 @@
+# Editors and IDE's
 .idea/
 .vs/
 .vscode/
-Website/Credentials/
+
+# Credentials
+credentials.ini
