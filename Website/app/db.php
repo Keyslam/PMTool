@@ -25,17 +25,17 @@ class DB {
 	}
 
 	private static function Instance()
-   {
+   	{
 		if (self::$instance == null)
 		{
-   		self::$instance = new DB();
-   	}
+   			self::$instance = new DB();
+   		}
  
-   	return self::$instance;
+   		return self::$instance;
 	}
 
-	private static function Connection() {
-   	return DB::Instance()->conn;
+	public static function Connection() {
+   		return DB::Instance()->conn;
 	}
 }
 ?>

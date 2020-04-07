@@ -1,6 +1,6 @@
-<?php $_shouldextend[1]=1; ?>;
+<?php $_shouldextend[1]=1; ?>
 
-<?php $this->startSection('title', 'Login'); ?>;
+<?php $this->startSection('title', 'Login'); ?>
 
 <?php $this->startSection('constrained-content'); ?>
 	<div class="row">
@@ -17,8 +17,12 @@
  <input placeholder="Wachtwoord" id="password" name="password" type="password" class="validate" maxlength="64" required>
  <label for="password">Wachtwoord</label>
  </div>
- <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons">account_box</i> 
- </button>
+
+ <?php if(isset($flash["loginError"])): ?>
+ <p><?php echo static::e($flash["loginError"]); ?></p>
+ <?php endif; ?>
+
+ <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons">account_box</i></button>
  </form>
  </div>
  </div>

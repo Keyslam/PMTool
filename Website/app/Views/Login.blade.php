@@ -1,6 +1,6 @@
-@extends('Layouts.BaseLayout');
+@extends('Layouts.BaseLayout')
 
-@section('title', 'Login');
+@section('title', 'Login')
 
 @section('constrained-content')
 	<div class="row">
@@ -17,8 +17,12 @@
                             <input placeholder="Wachtwoord" id="password" name="password" type="password" class="validate" maxlength="64" required>
                             <label for="password">Wachtwoord</label>
                         </div>
-                        <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons">account_box</i> 
-                        </button>
+
+                        @if (isset($flash["loginError"]))
+                            <p>{{ $flash["loginError"] }}</p>
+                        @endif
+
+                        <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons">account_box</i></button>
                     </form>
                 </div>
             </div>

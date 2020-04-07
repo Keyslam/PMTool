@@ -1,6 +1,6 @@
-@extends('Layouts.BaseLayout');
+@extends('Layouts.BaseLayout')
 
-@section('title', 'Home');
+@section('title', 'Home')
 
 @section('constrained-content')
 	<div class="row">

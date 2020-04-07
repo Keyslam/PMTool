@@ -7,12 +7,15 @@ Use eftec\routeone\RouteOne;
 
 // Load Controllers
 include "app/Controllers/HomeController.php";
+include "app/Controllers/AdminController.php";
+include "app/Controllers/UserController.php";
 
 // Load helpers
 include "app/flash.php";
 include "app/db.php";
 include "app/middleware.php";
 include "app/redirect.php";
+include "app/auth.php";
 
 function path() {
 	return "http://localhost/PMTool/Website/";
