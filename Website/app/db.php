@@ -5,10 +5,12 @@ class DB {
 
 	private function __construct()
 	{
-		$host    = "localhost";
-		$db      = "happy_brides";
-		$user    = "root";
-		$pass    = "";
+		$db_credentials = parse_ini_file("../credentials.ini", true)["database"];
+
+		$host    = $db_credentials["host"];
+		$db      = $db_credentials["databasename"];
+		$user    = $db_credentials["username"];
+		$pass    = $db_credentials["password"];
 		$charset = "utf8mb4";
 
 		$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
