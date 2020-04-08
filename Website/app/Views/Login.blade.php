@@ -22,7 +22,7 @@
                             <p>{{ $flash["loginError"] }}</p>
                         @endif
 
-                        <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons">account_box</i></button>
+                        <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons right">send</i></button>
                     </form>
                 </div>
             </div>

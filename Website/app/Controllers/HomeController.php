@@ -5,6 +5,8 @@ class HomeController {
 	}
 
 	public function loginAction() {
+		Middleware::login();
+
 		$flash = Flash::get();
 
 		echo blade()->run("Login", [
@@ -13,6 +15,9 @@ class HomeController {
 	}
 
 	public function loginPOSTAction() {
+		Middleware::postMethod();
+		Middleware::login();
+
 		$username = $_POST["username"]; // TODO: Sanitize and validate
 		$password = $_POST["password"]; // TODO: Sanitize and validate
 

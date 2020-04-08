@@ -12,11 +12,12 @@
 	
 	<body>
  <?php echo $this->runChild("Navbar"); ?>
+ 
 
  <?php echo $this->yieldContent('content'); ?>
 
  <div class="container">
- 
+ <?php echo $this->runChild("Header"); ?>
 
  			<?php echo $this->yieldContent('constrained-content'); ?>
  </div>

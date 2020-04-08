@@ -12,11 +12,12 @@
 	
 	<body>
 		@include("Navbar")
+		
 
 		@yield('content')
 
 		<div class="container">
-			
+			@include("Header")
 
    			@yield('constrained-content')
 		</div>

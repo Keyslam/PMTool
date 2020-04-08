@@ -3,7 +3,7 @@
 	    <a href="#" class="brand-logo">Logo</a>
  
  <ul id="nav-mobile" class="right hide-on-med-and-down">
- <li><a href="#">Home</a></li>
+ <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>">Home</a></li>
 
  <?php if(Auth::isLoggedIn() && !Auth::isAdmin()): ?>
  <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>/User/LogoutPOST">Logout</a></li>
