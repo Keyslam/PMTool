@@ -1,8 +1,0 @@
-<?php $_shouldextend[1]=1; ?>
-
-<?php $this->startSection("title", "TODO"); ?>
-
-<?php $this->startSection("constrained-content"); ?>
-	<h3>TODO</h3>
-<?php $this->stopSection(); ?>
-<?php if (@$_shouldextend[1]) { echo $this->runChild("Layouts.BaseLayout"); } ?>
