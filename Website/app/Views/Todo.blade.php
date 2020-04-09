@@ -1,7 +1,7 @@
 @extends("Layouts.BaseLayout")
 
-@section("title", "Home")
+@section("title", "TODO")
 
 @section("constrained-content")
-	@include("Rules")
+	<h3>TODO</h3>
 @endsection

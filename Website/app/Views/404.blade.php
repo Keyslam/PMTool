@@ -1,8 +1,8 @@
-@extends('Layouts.BaseLayout')
+@extends("Layouts.BaseLayout")
 
-@section('title', '404 Not found')
+@section("title", "404 Not found")
 
-@section('constrained-content')
+@section("constrained-content")
 	<div class="row">
 		<div class="col s10 offset-s1">
 			<div style="textalign: center;">

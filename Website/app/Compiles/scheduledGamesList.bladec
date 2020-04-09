@@ -1,0 +1,5 @@
+<ul class="collection">
+<?php $__currentLoopData = $scheduledGames; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $scheduledGame): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+	<li class="collection-item"><b>Test Spel <?php echo static::e($scheduledGame["ID"]); ?></b><br><?php echo static::e($scheduledGame["StartTime"]); ?></li>
+<?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
+</ul>

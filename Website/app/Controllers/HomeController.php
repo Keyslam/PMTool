@@ -37,11 +37,10 @@ class HomeController {
 			else {
 				Redirect::userHome();
 			}
-
 		}
 		else {
 			Flash::put([
-				"loginError" => "Ingevoerd gebruikernaam of wachtwoord is onjuist",
+				"loginErrors" => ["Ingevoerd gebruikernaam of wachtwoord is onjuist"],
 			]);
 			Redirect::login();
 		}

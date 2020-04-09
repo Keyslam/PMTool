@@ -1,8 +1,8 @@
-@extends('Layouts.BaseLayout')
+@extends("Layouts.BaseLayout")
 
-@section('title', 'Login')
+@section("title", "Login")
 
-@section('constrained-content')
+@section("constrained-content")
 	<div class="row">
 		<div class="col s10 offset-s1">
 			<div class="card">
@@ -19,7 +19,9 @@
                         </div>
 
                         @if (isset($flash["loginError"]))
-                            <p>{{ $flash["loginError"] }}</p>
+                            @foreach($flash["loginErrors"] as $loginError)
+                                <p>{{ $loginError }}</p>
+                            @endforeach
                         @endif
 
                         <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons right">send</i></button>

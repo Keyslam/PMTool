@@ -5,10 +5,16 @@
  <ul id="nav-mobile" class="right hide-on-med-and-down">
  <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>">Home</a></li>
 
- <?php if(Auth::isLoggedIn() && !Auth::isAdmin()): ?>
- <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>/User/LogoutPOST">Logout</a></li>
- <?php elseif(Auth::isLoggedIn() && Auth::isAdmin()): ?>
+ <?php if(Auth::isLoggedIn()): ?>
+ <?php if(Auth::isAdmin()): ?>
+ <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>/Admin/ManageGames">Mangage Games</a></li>
+ <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>/Admin/Statistics">Statistics</a></li>
  <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>/Admin/LogoutPOST">Logout</a></li>
+ <?php else: ?>
+ <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>/User/Signup">Signup</a></li>
+ <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>/User/Statistics">Statistics</a></li>
+ <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>/User/LogoutPOST">Logout</a></li>
+ <?php endif; ?>
  <?php else: ?>
  <li><a href="<?php echo static::e(router()->getCurrentUrl()); ?>/Home/Login">Login</a></li>
  <?php endif; ?>

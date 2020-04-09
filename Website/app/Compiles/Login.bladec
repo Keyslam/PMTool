@@ -1,8 +1,8 @@
 <?php $_shouldextend[1]=1; ?>
 
-<?php $this->startSection('title', 'Login'); ?>
+<?php $this->startSection("title", "Login"); ?>
 
-<?php $this->startSection('constrained-content'); ?>
+<?php $this->startSection("constrained-content"); ?>
 	<div class="row">
  <div class="col s10 offset-s1">
  <div class="card">
@@ -19,7 +19,9 @@
  </div>
 
  <?php if(isset($flash["loginError"])): ?>
- <p><?php echo static::e($flash["loginError"]); ?></p>
+ <?php $__currentLoopData = $flash["loginErrors"]; $this->addLoop($__currentLoopData); foreach($__currentLoopData as $loginError): $this->incrementLoopIndices(); $loop = $this->getFirstLoop(); ?>
+ <p><?php echo static::e($loginError); ?></p>
+ <?php endforeach; $this->popLoop(); $loop = $this->getFirstLoop(); ?>
  <?php endif; ?>
 
  <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons right">send</i></button>
@@ -29,4 +31,4 @@
  </div>
 	</div>
 <?php $this->stopSection(); ?>
-<?php if (@$_shouldextend[1]) { echo $this->runChild('Layouts.BaseLayout'); } ?>
+<?php if (@$_shouldextend[1]) { echo $this->runChild("Layouts.BaseLayout"); } ?>
