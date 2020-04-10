@@ -5,7 +5,7 @@ class DB {
 
 	private function __construct()
 	{
-		$db_credentials = parse_ini_file("../credentials.ini", true)["database"];
+		$db_credentials = parse_ini_file(configPath(), true)["database"];
 
 		$host    = $db_credentials["host"];
 		$db      = $db_credentials["databasename"];

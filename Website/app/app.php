@@ -22,6 +22,10 @@ function path() {
 	return "http://localhost/PMTool/Website/";
 }
 
+function configPath() {
+    return "http://localhost/PMTool/config.ini";
+}
+
 // Blade container
 function blade() {
 	global $blade;
