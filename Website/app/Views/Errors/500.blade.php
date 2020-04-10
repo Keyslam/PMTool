@@ -1,4 +1,4 @@
-@extends("Layouts.BaseLayout")
+@extends("Layouts.ErrorLayout")
 
 @section("title", "500 Internal Server Error")
 
@@ -7,7 +7,7 @@
         <div class="col s10 offset-s1">
             <div style="textalign: center;">
                 <h2>500 Internal Server Error</h2>
-                        <p>Something went wrong...<p>
+                <p>Something went wrong...</p>
             </div>
         </div>
     </div>

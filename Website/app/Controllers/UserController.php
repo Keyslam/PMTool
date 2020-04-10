@@ -5,16 +5,22 @@ class UserController {
     }
     
     public function signupAction() {
+        Middleware::login();
+
         echo blade()->run("Todo"); // TODO
     }
 
     public function statisticsAction() {
+
         echo blade()->run("Todo"); // TODO
     }
 
     public function logoutPOSTAction() {
-        $_SESSION["user_id"]  = null;
-        $_SESSION["is_admin"] = null;
+	    Middleware::postMethod();
+        Middleware::login();
+
+        unset($_SESSION["user_id"]);
+        unset($_SESSION["user_is_admin"]);
 
         Redirect::home();
     }
