@@ -11,6 +11,11 @@ class Redirect {
 		header("Location: ".path()."Error/");
 		die();
 	}
+	public static function internalServerError(){
+	    http_response_code(500);
+	    header("Location: ".path()."Error/");
+	    die( );
+    }
     
   	public static function home() {
 		header("Location: ".path());
@@ -21,6 +26,11 @@ class Redirect {
 		header("Location: ".path()."Home/Login/");
 		die();
 	}
+
+	public static function register() {
+	    header("Location: ".path()."Home/Register/");
+	    die();
+    }
 
 	public static function adminHome() {
 		header("Location: ".path()."Admin/");
