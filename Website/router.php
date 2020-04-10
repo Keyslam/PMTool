@@ -9,7 +9,7 @@ if (router()->getType() == 'controller') {
 		router()->callObject('%sController', true);
 	} catch (Exception $e) {
 		echo $e;
-		echo blade()->run('404');
+		echo blade()->run('Errors/404');
 	}
 }
 ?>
