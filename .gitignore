@@ -4,4 +4,5 @@
 .vscode/
 
 # Credentials
-credentials.ini
+config.ini
+Website/app/Compiles/

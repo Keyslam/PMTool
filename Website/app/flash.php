@@ -1,7 +1,7 @@
 <?php
 class Flash {
 	public static function put($data) {
-   		$_SESSION["flash"] = $data;
+   	$_SESSION["flash"] = $data;
 	}
 
 	public static function get() {
@@ -12,11 +12,11 @@ class Flash {
 			Flash::clear();
 		}
 
-   		return $data;
+   	return $data;
 	}
 
 	public static function clear() {
-   		$_SESSION["flash"] = array();
+   	$_SESSION["flash"] = array();
 	}
 }
 ?>

@@ -9,6 +9,8 @@ Use eftec\routeone\RouteOne;
 include "app/Controllers/HomeController.php";
 include "app/Controllers/AdminController.php";
 include "app/Controllers/UserController.php";
+include "app/Controllers/TournamentController.php";
+include "app/Controllers/ErrorController.php";
 
 // Load helpers
 include "app/flash.php";
@@ -19,6 +21,10 @@ include "app/auth.php";
 
 function path() {
 	return "http://localhost/PMTool/Website/";
+}
+
+function configPath() {
+    return "http://localhost/PMTool/config.ini";
 }
 
 // Blade container

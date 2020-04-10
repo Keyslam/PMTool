@@ -11,6 +11,18 @@ class Middleware {
         }
     }
 
+    public static function isAdmin() {
+        if (!Auth::isAdmin()) {
+            Redirect::notAuthorized();
+        }
+    }
+
+    public static function isLoggedIn(){
+        if (!Auth::isLoggedIn()){
+            Redirect::notAuthorized();
+        }
+    }
+
     public static function postMethod() {
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             Redirect::badRequest();
