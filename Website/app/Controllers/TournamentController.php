@@ -68,7 +68,8 @@ class TournamentController
             $stmt = DB::Connection()->prepare("DELETE FROM Tournament WHERE ID = :id");
             $stmt->bindValue(":id", $id);
             $stmt->execute();
-            if ($stmt->rowCount() == 1) {
+
+            if($stmt->rowCount() == 1){
                 echo 1;
             } elseif ($stmt->rowCount() > 1) {
                 echo 2;
@@ -189,25 +190,22 @@ class TournamentController
 
         $id = isset($_POST["id"]) ? trim(filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING)) : "";
 
-        try {
-            $settingStmt = DB::Connection()->prepare("SELECT Settings FROM Tournament WHERE ID = :id");
+        try{
+            $settingStmt = DB::Connection()->prepare("SELECT DATE( StartTime ) AS date_part, TIME( StartTime ) AS time_part, Settings FROM Tournament WHERE ID = :id");
             $settingStmt->bindValue(":id", $id);
             $settingStmt->execute();
 
 
-            $getPlayersStmt = DB::Connection()->prepare("SELECT ID, UserName FROM User WHERE ID = (SELECT UserID FROM GameStatistics WHERE TournamentID = :id)");
+            $getPlayersStmt = DB::Connection()->prepare("SELECT ID, UserName FROM User WHERE ID IN (SELECT UserID FROM GameStatistics WHERE TournamentID = :id)");
             $getPlayersStmt->bindValue(":id", $id);
             $getPlayersStmt->execute();
 
-            $playerList = $getPlayersStmt->fetch();
-            echo blade()->run("GamePlayerList", [
-                "playerList" => $playerList
-            ]);
-
-
-            $settings = $settingStmt->fetchColumn();
-            echo blade()->run("GameSettings", [
-                "playerList" => $playerList
+            $playerList = $getPlayersStmt->fetchAll();
+            $settings = $settingStmt->fetch();
+            echo blade()->run("ViewParts.GameSettings", [
+                "tournamentID" => $id,
+                "playerList" => $playerList,
+                "settings" => $settings
             ]);
 
 
