@@ -196,13 +196,13 @@ class TournamentController
             $settingStmt->execute();
 
 
-            $getPlayersStmt = DB::Connection()->prepare("SELECT ID, UserName FROM User WHERE ID = (SELECT UserID FROM GameStatistics WHERE TournamentID = :id)");
+            $getPlayersStmt = DB::Connection()->prepare("SELECT ID, UserName FROM User WHERE ID IN (SELECT UserID FROM GameStatistics WHERE TournamentID = :id)");
             $getPlayersStmt->bindValue(":id", $id);
             $getPlayersStmt->execute();
 
-            $playerList = $getPlayersStmt->fetch();
+            $playerList = $getPlayersStmt->fetchAll();
             $settings = $settingStmt->fetch();
-            echo blade()->run("GameSettings", [
+            echo blade()->run("ViewParts.GameSettings", [
                 "tournamentID" => $id,
                 "playerList" => $playerList,
                 "settings" => $settings

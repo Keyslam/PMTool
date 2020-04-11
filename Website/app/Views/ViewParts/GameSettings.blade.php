@@ -11,7 +11,7 @@
         <label for="scheduled-games">Geregistreerde spelers</label>
         <ul id="player-list" class="collection">
             @if($playerList > 0)
-                @foreach($playerlist as $player)
+                @foreach($playerList as $player)
                     <li class="collection-item">{{$player["UserName"]}}<input type="text" value="{{$player["ID"]}}"
                                                                               hidden>
                         <button><i class="material-icons small">close</i></button>
