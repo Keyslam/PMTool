@@ -113,7 +113,41 @@ class TournamentController
         }catch (Exception $exception){
             Redirect::internalServerError();
         }
+    }
 
+    public function ListTablesAction() {
+        try {
+            $stmt = DB::Connection()->prepare("SELECT ID FROM Tournament WHERE HasStarted='true'");
+            $stmt->execute();
+            $tournamentID = $stmt->fetchColumn();
+
+            if ($tournamentID) {
+                $stmt = DB::Connection()->prepare("SELECT DISTINCT CurrentTable FROM GameStatistics WHERE TournamentID=:tournamentID");
+                $stmt->bindValue("tournamentID", $tournamentID);
+                $stmt->execute();
+                $gameStatistics = $stmt->fetchAll();
+
+                $filledTables = array();
+
+                foreach ($gameStatistics as $gameStatistic) {
+                    $stmt = DB::Connection()->prepare("SELECT Username FROM User WHERE ID=(SELECT UserID FROM GameStatistics WHERE TournamentID =:tournamentID AND CurrentTable=:currentTable)");
+                    $stmt->bindValue("tournamentID", $tournamentID);
+                    $stmt->bindValue("currentTable", $gameStatistic["CurrentTable"]);
+                    $stmt->execute();
+                    push_array($filledTable, $stmt->fetchAll());
+                }
+
+                echo blade()->run("ViewParts.listTables", [
+                    "tables" => $filledTables,
+                ]);
+            }
+            else {
+                Redirect::locked();
+            }
+        }
+        catch (Exception $e) {
+            Redirect::internalServerError();
+        }
     }
 }
 

@@ -2,7 +2,6 @@
 
 class ErrorController
 {
-
     public function BadRequestAction()
     {
         echo blade()->run("Errors.400");
@@ -16,6 +15,11 @@ class ErrorController
     public function NotFoundAction()
     {
         echo blade()->run("Errors.404");
+    }
+
+    public function Locked()
+    {
+        echo blade()->run("Errors.423");
     }
 
     public function InternalServerErrorAction()

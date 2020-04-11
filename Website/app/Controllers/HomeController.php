@@ -150,6 +150,10 @@ class HomeController
             Redirect::register();
         }
     }
+
+    public function activeGameAction() {
+        echo blade()->run("ActiveGame");
+    }
 }
 
 ?>

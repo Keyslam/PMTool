@@ -3,5 +3,5 @@
 @section("title", "Home")
 
 @section("constrained-content")
-	@include("Rules")
+	@include("ViewParts.Rules")
 @endsection
