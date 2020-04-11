@@ -20,7 +20,7 @@ class AdminController {
         echo blade()->run("Todo"); // TODO
     }
 
-    public function logoutPOSTAction() {
+    public function logoutGETAction() {
 	    Middleware::getMethod();
         Middleware::isAdmin();
 

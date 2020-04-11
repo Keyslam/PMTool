@@ -15,7 +15,7 @@ class UserController {
         echo blade()->run("Todo"); // TODO
     }
 
-    public function logoutPOSTAction() {
+    public function logoutGETAction() {
 	    Middleware::getMethod();
         Middleware::login();
 
