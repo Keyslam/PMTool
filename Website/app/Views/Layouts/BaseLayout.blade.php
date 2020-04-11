@@ -13,13 +13,13 @@
 	</head>
 	
 	<body>
-		@include("Navbar")
+		@include("ViewParts.Navbar")
 		
 
 		@yield('content')
 
 		<div class="container">
-			@include("Header")
+			@include("viewParts.Header")
 
    			@yield('constrained-content')
 		</div>

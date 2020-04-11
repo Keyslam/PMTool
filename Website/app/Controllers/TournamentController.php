@@ -12,7 +12,7 @@ class TournamentController
             if ($stmt->execute()) {
                 $results = $stmt->fetchAll();
 
-                echo blade()->run("ScheduledGamesList", [
+                echo blade()->run("ViewParts.ScheduledGamesList", [
                     "scheduledGames" => $results,
                 ]);
             } else {
