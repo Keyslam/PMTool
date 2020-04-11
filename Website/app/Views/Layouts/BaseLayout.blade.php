@@ -13,13 +13,13 @@
 	</head>
 	
 	<body>
-		@include("Navbar")
+		@include("ViewParts.Navbar")
 		
 
 		@yield('content')
 
 		<div class="container">
-			@include("Header")
+			@include("viewParts.Header")
 
    			@yield('constrained-content')
 		</div>
@@ -29,6 +29,28 @@
 		<script>
 			$(document).ready(function() {
 				M.AutoInit();
+				$(".timepicker").timepicker({
+					"twelveHour": false,
+					"i18n": {
+						"cancel": "Annuleren",
+						"done": "Oke",
+						"clear": "Reset"
+					}
+				});
+				$(".datepicker").datepicker({
+					"minDate": new Date(),
+					"format": "yyyy-mm-dd",
+					"i18n": {
+						"months": ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"],
+						"monthsShort": ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+						"weekdays": ["Zondag", "Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag"],
+						"weekdaysShort": ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"],
+						"weekdaysAbbrev": ["Z", "M", "D", "W", "D", "V", "Z"],
+						"cancel": "Annuleren",
+						"done": "Oke",
+						"clear": "Reset"
+					}
+				});
 			});
 		</script>	
 

@@ -4,6 +4,7 @@ class HomeController
 {
     public function indexAction()
     {
+        Middleware::login();
         echo blade()->run("Home");
     }
 
@@ -72,6 +73,7 @@ class HomeController
 
     public function registerAction()
     {
+        Middleware::login();
         $flash = Flash::get();
         echo blade()->run("Register", [
             "flash" => $flash
@@ -81,6 +83,7 @@ class HomeController
     public function registerPOSTAction()
     {
         Middleware::postMethod();
+        Middleware::login();
 
         $username = isset($_POST["username"]) ? trim(filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING)) : "";;
         if ($username == "") {
@@ -146,6 +149,10 @@ class HomeController
             ]);
             Redirect::register();
         }
+    }
+
+    public function activeGameAction() {
+        echo blade()->run("ActiveGame");
     }
 }
 

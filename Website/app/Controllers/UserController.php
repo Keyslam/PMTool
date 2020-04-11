@@ -1,20 +1,28 @@
 <?php
 class UserController {
 	public function indexAction() {
+	    Middleware::getMethod();
 		echo blade()->run("Home");
     }
     
     public function signupAction() {
-        echo blade()->run("Todo"); // TODO
+	    Middleware::getMethod();
+        Middleware::login();
+
+        echo blade()->run("GameSignup");
     }
 
     public function statisticsAction() {
-        echo blade()->run("Todo"); // TODO
+	    Middleware::getMethod();
+
+        echo blade()->run("ViewParts.Todo"); // TODO
     }
 
-    public function logoutPOSTAction() {
-        $_SESSION["user_id"]  = null;
-        $_SESSION["is_admin"] = null;
+    public function logoutGETAction() {
+	    Middleware::getMethod();
+
+        unset($_SESSION["user_id"]);
+        unset($_SESSION["user_is_admin"]);
 
         Redirect::home();
     }

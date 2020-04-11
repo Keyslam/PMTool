@@ -1,22 +1,34 @@
 <?php
 class AdminController {
 	public function indexAction() {
+        Middleware::getMethod();
+        Middleware::isAdmin();
+
 		echo blade()->run("Home");
     }
     
     public function manageGamesAction() {
+        Middleware::getMethod();
+	    Middleware::isAdmin();
+
         echo blade()->run("GameManage", [
             //"scheduledGames" => $scheduled_games; 
         ]); // TODO
     }
 
     public function statisticsAction() {
-        echo blade()->run("Todo"); // TODO
+        Middleware::getMethod();
+        Middleware::isAdmin();
+
+        echo blade()->run("ViewParts.Todo"); // TODO
     }
 
-    public function logoutPOSTAction() {
-        $_SESSION["user_id"]  = null;
-        $_SESSION["is_admin"] = null;
+    public function logoutGETAction() {
+	    Middleware::getMethod();
+        Middleware::isAdmin();
+
+	    unset($_SESSION["user_id"]);
+        unset($_SESSION["user_is_admin"]);
 
         Redirect::home();
     }
