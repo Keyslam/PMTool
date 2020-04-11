@@ -1,12 +1,14 @@
 <?php
 class AdminController {
 	public function indexAction() {
+        Middleware::getMethod();
         Middleware::isAdmin();
 
 		echo blade()->run("Home");
     }
     
     public function manageGamesAction() {
+        Middleware::getMethod();
 	    Middleware::isAdmin();
 
         echo blade()->run("GameManage", [
@@ -15,9 +17,10 @@ class AdminController {
     }
 
     public function statisticsAction() {
+        Middleware::getMethod();
         Middleware::isAdmin();
 
-        echo blade()->run("Todo"); // TODO
+        echo blade()->run("ViewParts.Todo"); // TODO
     }
 
     public function logoutGETAction() {
