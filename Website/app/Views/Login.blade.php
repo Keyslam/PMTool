@@ -25,7 +25,6 @@
                         @endif
                         <a href="{{ router()->getCurrentUrl() }}/Home/Register">Nog geen account? Klik hier!</a><br>
                         <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons right">send</i></button>
-
                     </form>
                 </div>
             </div>
