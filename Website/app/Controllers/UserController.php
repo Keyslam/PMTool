@@ -16,7 +16,7 @@ class UserController {
     }
 
     public function logoutPOSTAction() {
-	    Middleware::postMethod();
+	    Middleware::getMethod();
         Middleware::login();
 
         unset($_SESSION["user_id"]);

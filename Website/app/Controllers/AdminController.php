@@ -21,7 +21,7 @@ class AdminController {
     }
 
     public function logoutPOSTAction() {
-	    Middleware::postMethod();
+	    Middleware::getMethod();
         Middleware::isAdmin();
 
 	    unset($_SESSION["user_id"]);
