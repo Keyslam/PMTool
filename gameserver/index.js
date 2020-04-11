@@ -4,6 +4,22 @@ const wss = new WebSocket.Server({ port: 1500 });
 
 let activeGame = null;
 
+let commands = {
+  "isGameActive": isGameActive,
+
+  "ping": ping,
+  "repeat": repeat,
+  "newUserJoins": newUserJoins,
+}
+
+function broadcast(data) {
+  wss.clients.forEach(function each(client) {
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(data);
+    }
+  });
+}
+
 function isGameActive(ws, data) {
   let response = {
     "value": activeGame ? true : false,
@@ -18,6 +34,12 @@ function ping(ws, data) {
   }));
 }
 
+function newUserJoins(ws, data) {
+  broadcast(JSON.stringify({
+    "command": "newUserJoins",
+  }))
+}
+
 function repeat(ws, data) {
   let toRepeat = data.toRepeat;
   
@@ -28,13 +50,6 @@ function repeat(ws, data) {
   ws.send(JSON.stringify({
     "value": toRepeat,
   }));
-}
-
-let commands = {
-  "isGameActive": isGameActive,
-
-  "ping": ping,
-  "repeat": repeat,
 }
 
 wss.on("connection", function connection(ws) {
