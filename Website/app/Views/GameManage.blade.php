@@ -1,6 +1,6 @@
 @extends("Layouts.BaseLayout")
 
-@section("title", "Home")
+@section("title", "Spellen beheren")
 
 @section("constrained-content")
     <div class="row">
@@ -24,7 +24,9 @@
         <form id="new-game-form">
             <div class="modal-content">
                 <h4>Kies een datum en tijdstip voor een nieuwe game</h4>
+                <label for="date">Kies een datum:</label>
                 <input id="date" type="text" class="datepicker" required>
+                <label for="time">Kies een tijd:</label>
                 <input id="time" type="text" class="timepicker" required>
             </div>
             <div class="modal-footer">
@@ -90,7 +92,7 @@
         function selectGame(event) {
             $.ajax({
                 method: "POST",
-                url: "@asset('Tournament/SelectGame')",
+                url: "@asset('Tournament/SelectGameSettings')",
                 dataType: "html",
                 data: {
                     "id": $(event.target).closest("li").data("id")

@@ -16,6 +16,12 @@ class Redirect {
 	    http_response_code(404);
 	    header("Location: ".path()."Error/NotFound/");
 	    die();
+	}
+	
+	public static function  Locked() {
+	    http_response_code(423);
+	    header("Location: ".path()."Error/Locked/");
+	    die();
     }
 
 	public static function internalServerError(){
