@@ -1,9 +1,8 @@
 <ul class="collection">
     @if(count($scheduledGames) > 0)
         @foreach ($scheduledGames as $scheduledGame)
-            <li class="collection-item games">
+            <li class="collection-item games" data-id="{{$scheduledGame["ID"]}}">
                 <b>{{ $scheduledGame["StartTime"] }}</b>
-                <input type="text" value="{{$scheduledGame["ID"]}}" hidden>
             </li>
         @endforeach
     @else

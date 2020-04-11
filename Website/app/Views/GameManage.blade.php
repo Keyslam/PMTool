@@ -139,8 +139,8 @@
         $(document).ready(function () {
             updateScheduledGames();
             $("#new-game-form").on("submit", newGame);
-            $("#cancel-game").on("click", clearNewGameModal)
-            $(".games").on("click", selectGame)
+            $("#cancel-game").on("click", clearNewGameModal);
+            $(".games").on("click", selectGameSettings);
             $("#remove-game").on("click", removeGame); // TODO: Add Tournament ID to button
         });
 
@@ -204,10 +204,10 @@
                 });
         }
 
-        function selectGame() {
+        function selectGameSettings() {
             $.ajax({
                 method: "POST",
-                url: "@asset('Tournament/SelectGame')",
+                url: "@asset('Tournament/SelectGameSettings')",
                 dataType: "html",
                 data: {
                     "id": $(this).lastChild.val()
