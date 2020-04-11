@@ -7,7 +7,6 @@ class UserController {
     
     public function signupAction() {
 	    Middleware::getMethod();
-        Middleware::login();
 
         echo blade()->run("GameSignup");
     }

@@ -16,7 +16,6 @@
 @yield('content')
 
 <div class="container">
-    @include("ViewParts.Header")
 
     @yield('constrained-content')
     <div class="row">
