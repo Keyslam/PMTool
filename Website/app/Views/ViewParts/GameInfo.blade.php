@@ -38,13 +38,15 @@
             data: {
                 "TournamentID": $("#tournament-id").val(),
             }
-        }).done(function (response) {
+        })
+        .done(function (response) {
             if (response.success) {
                 document.dispatchEvent(userSignupChangedEvent);
             } else {
-                alert("Er is iets mis gegaan");
+                serverError(response);
             }
         })
+        .fail(serverError);
     }
 
     function leaveGame(){
@@ -55,8 +57,14 @@
             data: {
                 "TournamentID": $("#tournament-id").val(),
             }
-        }).done(function (response) {
-            document.dispatchEvent(userSignupChangedEvent);
         })
+        .done(function(response) {
+            if (response.success) {
+                document.dispatchEvent(userSignupChangedEvent);
+            } else {
+                serverError(response);
+            }
+        })
+        .fail(serverError);
     }
 </script>

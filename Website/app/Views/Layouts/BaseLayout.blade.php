@@ -53,6 +53,11 @@
 					}
 				});
 			});
+
+			function serverError(response) {
+				alert("Something went wrong. Check the console for details");
+				console.log(response);
+			}
 		</script>	
 
 		@yield('scripts')

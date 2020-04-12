@@ -111,8 +111,10 @@
 </div>
 
 <script>
+    var gameRemovedEvent = new Event("gameRemoved");
+
     $(document).ready(function () {
-        $("#remove-game").on("click", removeGame); // TODO: Add Tournament ID to button
+        $("#remove-game").on("click", removeGame);
     })
 
     function removeGame(event) {
@@ -120,33 +122,18 @@
         $.ajax({
             method: "POST",
             url: "@asset('Tournament/RemoveGame')",
-            dataType: "html",
+            dataType: "json",
             data: {
-                "id":  $("#game-id").val()
+                "id": $("#game-id").val()
             }
-        }).done(function (response) {
-            if (response === "1") {
-                updateScheduledGames();
-            } else if (response > "1") {
-                alert('Error. Meerdere toernoeien verwijdert')
-            } else {
-                alert(response);
-            }
-        });
-
-    }
-
-    function updateScheduledGames() {
-        $.ajax({
-            method: "POST",
-            url: "@asset('Tournament/ListScheduled')",
-            dataType: "html",
         })
-            .done(function (data) {
-                $("#scheduled-games").html(data);
-            })
-            .fail(function () {
-                alert("Something went wrong ;-;");
-            });
+        .done(function (response) {
+            if (response.success) {
+                document.dispatchEvent(gameRemovedEvent);
+            } else {
+                serverError();
+            }
+        })
+        .fail(serverError);
     }
 </script>

@@ -55,6 +55,8 @@
 @section("scripts")
 	<script>
 		$(document).ready(function () {
+			document.addEventListener("gameRemoved", updateScheduledGames);
+
 			socketCommands["newGameAdded"] = function() {
 				updateScheduledGames();
 			}
@@ -80,48 +82,55 @@
 					"time": $("#time").val(),
 					"date": $("#date").val()
 				}
-			}).done(function (response) {
+			}
+			).done(function (response) {
 				if (response.success) 
 				{
 					$("#new-game-modal").modal("close");
 					clearNewGameModal();
+
 					wsc.send(JSON.stringify({
 						"command": "newGameAdded", 
 						"gameID": response,
 					}));
 				} else {
-					alert("Er is iets mis gegaan.");
+					serverError(response);
 				}
-			});
+			})
+			.fail(serverError);
 		}
 
 		function updateScheduledGames() {
-			$.ajax({
-				method: "POST",
-				url: "@asset('Tournament/ListScheduled')",
-				dataType: "html",
-			})
-			.done(function (data) {
-				$("#scheduled-games").html(data);
-			})
-			.fail(function () {
-				alert("Something went wrong ;-;");
-			});
-		}
+            $.ajax({
+                method: "POST",
+                url: "@asset('Tournament/ListScheduled')",
+                dataType: "json",
+            })
+            .done(function(response) {
+                if (response.success) {
+                    $("#scheduled-games").html(response.html);
+                } else {
+                    serverError(response);
+                }
+            })
+            .fail(serverError);
+        }
 
 		function selectGame(event) {
 			$.ajax({
 				method: "POST",
 				url: "@asset('Tournament/SelectGameSettings')",
-				dataType: "html",
+				dataType: "json",
 				data: {
 					"id": $(event.target).closest("li").data("id")
 				}
-			}).done(function (data) {
-				$("#game-settings").html(data);
-			}).fail(function () {
-				alert('De toernooi data kon niet worden opgehaald');
-			})
+			}).done(function(response) {
+				if (response.success) {
+					$("#game-settings").html(response.html);
+				} else {
+					serverError(response);
+				}
+			}).fail(serverError)
 		}
 	</script>
 @endsection()

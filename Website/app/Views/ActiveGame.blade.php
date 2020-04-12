@@ -7,32 +7,21 @@
 @endsection
 
 @section("scripts")
-@include("Socket")
 <script>
 	$(document).ready(function() {
 		$.ajax({
 			method: "POST",
             url: "@asset('Tournament/ListTables')",
-        	dataType: "html",
+        	dataType: "json",
 		})
-		.done(function(data) {
-			$("#tables-container").html(data);
+		.done(function(response) {
+			if (response.success) {
+				$("#tables-container").html(response.html);
+			} else {
+				serverError(response);
+			}
 		})
-		
-		$("#ping-button").on("click", function() {
-			wsc.send(JSON.stringify({
-				"command": "ping",
-			}));
-		});
-
-		$("#form-repeat").on("submit", function(event) {
-			event.preventDefault();
-
-			wsc.send(JSON.stringify({
-				"command": "repeat",
-				"toRepeat": $("#repeat-input").val(),
-			}));
-		})
+		.fail(serverError);
 	})
 </script>
 @endsection
