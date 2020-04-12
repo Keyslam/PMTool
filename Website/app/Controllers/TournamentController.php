@@ -34,9 +34,12 @@ class TournamentController
 			return Response::fail();
 		}
 
+		$settings = new GameSettings();
+
 		try {
-			$stmt = DB::Connection()->prepare("INSERT INTO Tournament(StartTime) VALUES (:startTime)");
+			$stmt = DB::Connection()->prepare("INSERT INTO Tournament(StartTime, Settings) VALUES (:startTime, :settings)");
 			$stmt->bindValue("startTime", $date . " " . $time . ":00");
+			$stmt->bindValue("settings", json_encode($settings, true));
 			$stmt->execute();
 			if ($stmt->rowCount() == 1) {
 				return Response::success([
