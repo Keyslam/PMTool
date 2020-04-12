@@ -2,9 +2,9 @@
 <div class="col s4">
     <div class="row">
         <label for="start-date">Toernooi datum</label>
-        <input id="start-date" type="text" value="{{$settings["time_part"]}}" class="datepicker">
+        <input id="start-date" type="text" value="{{$dateTime["StartTime"]}}" class="datepicker">
         <label for="start-time">Start tijd</label>
-        <input id="start-time" type="text" value="{{$settings["date_part"]}}" class="timepicker">
+        <input id="start-time" type="text" value="{{$dateTime["StartDate"]}}" class="timepicker">
     </div>
 
     <div class="row">

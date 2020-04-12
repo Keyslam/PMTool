@@ -231,7 +231,9 @@ class TournamentController
 				$stmt->bindValue(":id", $id);
 				$stmt->execute();
 
-				$settings = $stmt->fetch();
+				$data = $stmt->fetch();
+				$dateTime = ["StartDate" => $data["date_part"], "StartTime" => $data["time_part"]];
+				$settings = json_decode($data["Settings"]);
 			}
 			
 			{
@@ -245,7 +247,8 @@ class TournamentController
 			return Response::view("ViewParts.GameSettings", [
 				"tournamentID" => $id,
 				"playerList" => $playerList,
-				"settings" => $settings
+				"settings" => $settings,
+                "dateTime" => $dateTime
 			]);
 		} catch (Exception $exception) {
 			return Response::internalServerError($exception);
