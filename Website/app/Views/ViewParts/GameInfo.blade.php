@@ -1,9 +1,10 @@
 <div class="col s6">
     <input id="tournament-id" type="text" value="{{$tournamentID}}" hidden>
+
     @if($isJoined == 0)
-        <button id="join-game">Inschrijven</button>
+        <button class="btn waves-effect waves-light" id="join-game">Inschrijven</button>
     @else
-        <butten id="leave-game">Uitschrijven</butten>
+        <button class="btn waves-effect waves-light" id="leave-game" invisible>Uitschrijven</button>
     @endif
 </div>
 
@@ -22,6 +23,8 @@
 </div>
 
 <script>
+    var userSignupChangedEvent = new Event("userSignupChanged");
+
     $(document).ready(function () {
         $("#join-game").on("click", joinGame);
         $("#leave-game").on("click", leaveGame)
@@ -31,15 +34,15 @@
         $.ajax({
             method: "POST",
             url: "@asset('Tournament/JoinGame')",
-            dataType: "html",
+            dataType: "json",
             data: {
                 "TournamentID": $("#tournament-id").val(),
             }
         }).done(function (response) {
-            if (response === "1") {
-                alert(response);
+            if (response.success) {
+                document.dispatchEvent(userSignupChangedEvent);
             } else {
-                alert(response);
+                alert("Er is iets mis gegaan");
             }
         })
     }
@@ -53,11 +56,7 @@
                 "TournamentID": $("#tournament-id").val(),
             }
         }).done(function (response) {
-            if (response === "1") {
-
-            } else {
-                alert("U bent niet uitgeschreven voor dit toernooi");
-            }
+            document.dispatchEvent(userSignupChangedEvent);
         })
     }
 </script>

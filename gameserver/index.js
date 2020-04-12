@@ -6,6 +6,7 @@ let activeGame = null;
 
 let commands = {
   "isGameActive": isGameActive,
+  "newGameAdded": newGameAdded,
 
   "ping": ping,
   "repeat": repeat,
@@ -69,6 +70,12 @@ function isGameActive(ws, data) {
   };
   
   ws.send(JSON.stringify(response));
+}
+
+function newGameAdded(ws, data) {
+  broadcast(JSON.stringify({
+    "command": "newGameAdded",
+  }));
 }
 
 function ping(ws, data) {

@@ -19,7 +19,7 @@
                 <li><a href="{{ router()->getCurrentUrl() }}/Home/Login">Login</a></li>
             @endif
 
-            <li><a href="#">Active Game</a></li>
+            <li><a href="{{ router()->getCurrentUrl() }}/Home/ActiveGame">Active Game</a></li>
         </ul>
 	</div>
 </nav>

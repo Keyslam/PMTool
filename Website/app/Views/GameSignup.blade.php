@@ -6,11 +6,11 @@
     <div class="row">
         <div class="col s3">
             <label for="scheduled-games">Ingeplande spellen</label>
-            <ul id="scheduled-games">
+            <div id="scheduled-games">
 
-            </ul>
+            </div>
             <button id="game-list-refresh" class="btn  modal-trigger waves-effect waves-light"
-                    style="width: 100%">Refresh
+                style="width: 100%">Refresh
             </button>
         </div>
 
@@ -22,10 +22,19 @@
 
 @section("scripts")
     <script>
+        let selectedTournamentID = null;
+
         $(document).ready(function () {
+            document.addEventListener("userSignupChanged", function() {
+                selectGame();
+            })
+            
             updateScheduledGames();
             $("#game-list-refresh").on("click", updateScheduledGames);
-            $("#scheduled-games").on("click", "li", selectGame);
+            $("#scheduled-games").on("click", "li", function(event) {
+                selectedTournamentID = $(event.target).closest("li").data("id");
+                selectGame();
+            });
 
         });
 
@@ -49,7 +58,7 @@
                 url: "@asset('Tournament/SelectGame')",
                 dataType: "html",
                 data: {
-                    "id": $(event.target).closest("li").data("id")
+                    "id": selectedTournamentID,
                 }
             }).done(function (data) {
                 $("#game-info").html(data);
