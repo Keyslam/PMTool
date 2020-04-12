@@ -31,7 +31,7 @@ class Response
 		return Response::create(false, 400);
 	}
 
-	public static function NotAuthorized() {
+	public static function notAuthorized() {
 		return Response::create(false, 401);
 	}
 
@@ -43,7 +43,9 @@ class Response
 		return Response::create(false, 423);
 	}
 
-	public static function internalServerError() {
-		return Response::create(false, 500);
+	public static function internalServerError($exception) {
+		return Response::create(false, 500, [
+			"exception" => $exception,
+		]);
 	}
 }

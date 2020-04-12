@@ -42,13 +42,9 @@
 				url: "@asset('Tournament/ListScheduled')",
 				dataType: "json",
 			})
-			.done(function(response) {
-				if (response.success) {
-					$("#scheduled-games").html(response.html);
-				} else {
-					serverError(response);
-				}
-			})
+			.done(serverSuccess(function(response) {
+				$("#scheduled-games").html(response.html);
+			}))
 			.fail(serverError);
 		}
 
@@ -65,13 +61,9 @@
 					"id": selectedTournamentID,
 				}
 			})
-			.done(function(response) {
-				if (response.success) {
-					$("#game-info").html(response.html);
-				} else {
-					serverError(response);
-				}
-			})
+			.done(serverSuccess(function(response) {
+				$("#game-info").html(response.html);
+			}))
 			.fail(serverError);
 		}
 	</script>

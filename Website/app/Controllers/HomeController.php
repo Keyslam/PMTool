@@ -1,17 +1,26 @@
 <?php
+Use FFI\ParserException;
 
 class HomeController
 {
 	public function indexAction()
 	{
-		//Middleware::login();
+		if (Middleware::isLoggedIn()) {
+			if (Middleware::isAdmin()) { Redirect::adminHome(); }
+			elseif (Middleware::isUser()) { Redirect::userHome(); }
+			else return Response::badRequest();
+		}
 
 		return Response::view("Home");
 	}
 
 	public function loginAction()
 	{
-		//Middleware::login();
+		if (Middleware::isLoggedIn()) {
+			if (Middleware::isAdmin()) { Redirect::adminHome(); }
+			elseif (Middleware::isUser()) { Redirect::userHome(); }
+			else return Response::badRequest();
+		}
 
 		$flash = Flash::get();
 
@@ -23,7 +32,11 @@ class HomeController
 	public function loginPOSTAction()
 	{
 		if (!Middleware::postMethod()) { return Response::badRequest(); }
-		//Middleware::login();
+		if (Middleware::isLoggedIn()){
+			if (Middleware::isAdmin()) { Redirect::adminHome(); }
+			elseif (Middleware::isUser()) { Redirect::userHome(); }
+			else return Response::badRequest();
+		}
 
 		$username = isset($_POST["username"]) ? trim(filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING)) : "";
 		if ($username == "") {
@@ -68,13 +81,18 @@ class HomeController
 				Redirect::login();
 			}
 		} catch (Exception $exception) {
-			Response::internalServerError();
+			return Response::internalServerError($exception);
 		}
 	}
 
 	public function registerAction()
 	{
-		Middleware::login();
+		if (Middleware::isLoggedIn()) {
+			if (Middleware::isAdmin()) { Redirect::adminHome(); }
+			elseif (Middleware::isUser()) { Redirect::userHome(); }
+			else return Response::badRequest();
+		}
+
 		$flash = Flash::get();
 		return Response::view("Register", [
 			"flash" => $flash
@@ -83,17 +101,21 @@ class HomeController
 
 	public function registerPOSTAction()
 	{
-		Middleware::postMethod();
-		Middleware::login();
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (Middleware::isLoggedIn()) {
+			if (Middleware::isAdmin()) { Redirect::adminHome(); }
+			elseif (Middleware::isUser()) { Redirect::userHome(); }
+			else return Response::badRequest();
+		}
 
 		$username = isset($_POST["username"]) ? trim(filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING)) : "";;
 		if ($username == "") {
-			Response::badRequest();
+			return Response::badRequest();
 		}
 
 		$password = isset($_POST["password"]) ? password_hash(trim(filter_input(INPUT_POST, "password", FILTER_SANITIZE_STRING)), PASSWORD_DEFAULT) : ""; // 0 = POST
 		if ($password == "") {
-			Response::badRequest();
+			return Response::badRequest();
 		}
 
 		$adminToken = isset($_POST['adminToken']) ? trim(filter_input(INPUT_POST, "adminToken", FILTER_SANITIZE_STRING)) : "";
@@ -106,8 +128,10 @@ class HomeController
 					]);
 					Redirect::register();
 				}
+			} catch (ParserException $exception) {
+				return Response::internalServerError($exception);
 			} catch (Exception $exception) {
-				Response::internalServerError();
+				return Response::internalServerError($exception);
 			}
 		}
 
@@ -141,14 +165,13 @@ class HomeController
 					Redirect::register();
 				}
 			} catch (Exception $exception) {
-				echo $exception;
-				Response::internalServerError();
+				return Response::internalServerError($exception);
 			}
 		} else {
 			Flash::put([
 				"registerErrors" => ["De wachtwoorden zijn niet het zelfde"]
 			]);
-			Redirect::register();
+			return Redirect::register();
 		}
 	}
 

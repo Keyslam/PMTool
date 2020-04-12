@@ -39,13 +39,9 @@
                 "TournamentID": $("#tournament-id").val(),
             }
         })
-        .done(function (response) {
-            if (response.success) {
-                document.dispatchEvent(userSignupChangedEvent);
-            } else {
-                serverError(response);
-            }
-        })
+        .done(serverSuccess(function(response) {
+            document.dispatchEvent(userSignupChangedEvent);
+        }))
         .fail(serverError);
     }
 
@@ -53,18 +49,14 @@
         $.ajax({
             method: "POST",
             url: "@asset('Tournament/LeaveGame')",
-            dataType: "html",
+            dataType: "json",
             data: {
                 "TournamentID": $("#tournament-id").val(),
             }
         })
-        .done(function(response) {
-            if (response.success) {
-                document.dispatchEvent(userSignupChangedEvent);
-            } else {
-                serverError(response);
-            }
-        })
+        .done(serverSuccess(function(response) {
+            document.dispatchEvent(userSignupChangedEvent);
+        }))
         .fail(serverError);
     }
 </script>

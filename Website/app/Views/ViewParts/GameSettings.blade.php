@@ -127,13 +127,9 @@
                 "id": $("#game-id").val()
             }
         })
-        .done(function (response) {
-            if (response.success) {
-                document.dispatchEvent(gameRemovedEvent);
-            } else {
-                serverError();
-            }
-        })
+        .done(serverSuccess(function(response) {
+            document.dispatchEvent(gameRemovedEvent);
+        }))
         .fail(serverError);
     }
 </script>
