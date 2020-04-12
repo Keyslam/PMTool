@@ -85,20 +85,15 @@
 					"date": $("#date").val()
 				}
 			}
-			).done(function (response) {
-				if (response.success) 
-				{
-					$("#new-game-modal").modal("close");
-					clearNewGameModal();
+			).done(serverSuccess(function(response) {
+				$("#new-game-modal").modal("close");
+				clearNewGameModal();
 
-					wsc.send(JSON.stringify({
-						"command": "newGameAdded", 
-						"gameID": response,
-					}));
-				} else {
-					serverError(response);
-				}
-			})
+				wsc.send(JSON.stringify({
+					"command": "newGameAdded", 
+					"gameID": response,
+				}));
+			}))
 			.fail(serverError);
 		}
 
@@ -108,13 +103,9 @@
                 url: "@asset('Tournament/ListScheduled')",
                 dataType: "json",
             })
-            .done(function(response) {
-                if (response.success) {
-                    $("#scheduled-games").html(response.html);
-                } else {
-                    serverError(response);
-                }
-            })
+            .done(serverSuccess(function(response) {
+                $("#scheduled-games").html(response.html);
+            }))
             .fail(serverError);
         }
 
@@ -131,13 +122,9 @@
 				data: {
 					"id": id
 				}
-			}).done(function(response) {
-				if (response.success) {
-					$("#game-settings").html(response.html);
-				} else {
-					serverError(response);
-				}
-			}).fail(serverError)
+			}).done(serverSuccess(function(response) {
+				$("#game-settings").html(response.html);
+			})).fail(serverError)
 		}
 	</script>
 @endsection()

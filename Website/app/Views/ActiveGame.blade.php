@@ -14,13 +14,9 @@
             url: "@asset('Tournament/ListTables')",
         	dataType: "json",
 		})
-		.done(function(response) {
-			if (response.success) {
-				$("#tables-container").html(response.html);
-			} else {
-				serverError(response);
-			}
-		})
+		.done(serverSuccess(function(response) {
+			$("#tables-container").html(response.html);
+		}))
 		.fail(serverError);
 	})
 </script>

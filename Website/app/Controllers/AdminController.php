@@ -1,31 +1,31 @@
 <?php
 class AdminController {
 	public function indexAction() {
-		Middleware::getMethod();
-		Middleware::isAdmin();
+		if (!Middleware::getMethod()) { return Response::badRequest(); }
+		if (!Middleware::isAdmin()) { return Redirect::login(); }
 
-		echo blade()->run("Home");
+		return Response::view("Home");
 	}
 	
 	public function manageGamesAction() {
-		Middleware::getMethod();
-		Middleware::isAdmin();
+		if (!Middleware::getMethod()) { return Response::badRequest(); }
+		if (!Auth::isAdmin()) { Redirect::login(); }
 
-		echo blade()->run("GameManage", [
+		return Response::view("GameManage", [
 			//"scheduledGames" => $scheduled_games; 
 		]); // TODO
 	}
 
 	public function statisticsAction() {
-		Middleware::getMethod();
-		Middleware::isAdmin();
+		if (!Middleware::getMethod()) { return Response::badRequest(); }
+		if (!Auth::isAdmin()) { Redirect::login(); }
 
-		echo blade()->run("ViewParts.Todo"); // TODO
+		return Response::view("ViewParts.Todo"); // TODO
 	}
 
 	public function logoutGETAction() {
-		Middleware::getMethod();
-		Middleware::isAdmin();
+		if (!Middleware::getMethod()) { return Response::badRequest(); }
+		if (!Auth::isAdmin()) { Redirect::login(); }
 
 		unset($_SESSION["user_id"]);
 		unset($_SESSION["user_is_admin"]);

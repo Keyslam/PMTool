@@ -2,43 +2,29 @@
 class Middleware {
     public static function login() {
         if (Auth::isLoggedIn()) {
-            if (Auth::isAdmin()) {
-                Redirect::adminHome();
-            }
-            else {
-                Redirect::userHome();
-            }
+            return false;
         }
+        return true;
     }
 
     public static function isUser() {
-        if (!Auth::isUser()) {
-            Redirect::notAuthorized();
-        }
+        return Auth::isUser();
     }
 
     public static function isAdmin() {
-        if (!Auth::isAdmin()) {
-            Redirect::notAuthorized();
-        }
+        return Auth::isAdmin();
     }
 
     public static function isLoggedIn(){
-        if (!Auth::isLoggedIn()){
-            Redirect::notAuthorized();
-        }
+        return Auth::isLoggedIn();
     }
 
     public static function postMethod() {
-        if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-            Redirect::badRequest();
-        }
+        return $_SERVER["REQUEST_METHOD"] == "POST";
     }
 
     public static function getMethod() {
-        if ($_SERVER["REQUEST_METHOD"] !== "GET") {
-            Redirect::badRequest();
-        }
+        return $_SERVER["REQUEST_METHOD"] == "GET";
     }
 }
 ?>

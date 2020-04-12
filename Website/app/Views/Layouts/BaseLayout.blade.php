@@ -54,6 +54,16 @@
 				});
 			});
 
+			function serverSuccess(callback) {
+				return function(response) {
+					if (response.success) {
+						callback(response);
+					} else {
+						serverError(response);
+					}
+				} 
+			}
+
 			function serverError(response) {
 				alert("Something went wrong. Check the console for details");
 				console.log(response);
