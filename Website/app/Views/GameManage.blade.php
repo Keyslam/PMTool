@@ -54,8 +54,10 @@
 
 @section("scripts")
 	<script>
+	var id = null;
 		$(document).ready(function () {
 			document.addEventListener("gameRemoved", updateScheduledGames);
+			document.addEventListener("userSignupChanged", updateGamesettings);
 
 			socketCommands["newGameAdded"] = function() {
 				updateScheduledGames();
@@ -108,12 +110,17 @@
         }
 
 		function selectGame(event) {
+			id =  $(event.target).closest("li").data("id");
+			updateGamesettings();
+		}
+
+		function updateGamesettings() {
 			$.ajax({
 				method: "POST",
 				url: "@asset('Tournament/SelectGameSettings')",
 				dataType: "json",
 				data: {
-					"id": $(event.target).closest("li").data("id")
+					"id": id
 				}
 			}).done(serverSuccess(function(response) {
 				$("#game-settings").html(response.html);

@@ -182,6 +182,36 @@ class TournamentController
 		}
 	}
 
+	public function removeFromGameAction(){
+		Middleware::postMethod();
+		Middleware::isAdmin();
+
+		$TournamentID = isset($_POST["TournamentID"]) ? trim(filter_input(INPUT_POST, "TournamentID", FILTER_SANITIZE_STRING)) : "";
+		if ($TournamentID == "") {
+			Response::badRequest();
+		}
+
+		$playerID = isset($_POST["id"]) ? trim(filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING)) : "";
+		if ($playerID == "") {
+			Response::badRequest();
+		}
+
+		try{
+			$stmt = DB::Connection()->prepare("DELETE FROM GameStatistics WHERE TournamentID = :TournamentID AND UserID = :UserID");
+			$stmt->bindValue("TournamentID", $TournamentID);
+			$stmt->bindValue("UserID", $playerID);
+			$stmt->execute();
+
+			if ($stmt->rowCount() == 1){
+				Response::success();
+			} else {
+				Response::fail();
+			}
+		} catch (Exception $exception){
+			Response::internalServerError();
+		}
+	}
+
 	public function SelectGameSettingsAction()
 	{
 		if (!Middleware::postMethod()) { return Response::badRequest(); }
