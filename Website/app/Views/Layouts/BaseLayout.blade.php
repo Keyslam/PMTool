@@ -35,8 +35,9 @@
 						"cancel": "Annuleren",
 						"done": "Oke",
 						"clear": "Reset"
-					}
+					},
 				});
+
 				$(".datepicker").datepicker({
 					"minDate": new Date(),
 					"format": "yyyy-mm-dd",

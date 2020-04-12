@@ -4,12 +4,12 @@
     @endif
 
     <div class="col s3">
-        <div class="card">
+        <div class="card hoverable table-select" data-num="{{ $i }}">
             <div class="card-content">
                 <span class="card-title">Tafel {{ $i + 1 }}</span>
 
-                @foreach($tables[$i]["users"] as $user)
-                    <b>{{ $user }}</b>
+                @foreach($tables[$i] as $user)
+                    <b>{{ $user["UserName"] }}</b>
                     <br>
                 @endforeach
             </div>
@@ -20,3 +20,14 @@
         </div>
     @endif
 @endfor
+
+<script>
+    $(document).ready(function() {
+        $(".table-select").on("click", function(event) {
+            let elem = $(event.target).closest(".table-select");
+            let tableNum = elem.data("num");
+
+            alert(tableNum);
+        })
+    })
+</script>

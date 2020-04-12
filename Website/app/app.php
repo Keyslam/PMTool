@@ -19,6 +19,7 @@ include "app/db.php";
 include "app/middleware.php";
 include "app/redirect.php";
 include "app/auth.php";
+include "app/response.php";
 
 function path() {
 	return "http://localhost/PMTool/Website/";

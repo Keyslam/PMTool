@@ -11,6 +11,12 @@ class Middleware {
         }
     }
 
+    public static function isUser() {
+        if (!Auth::isUser()) {
+            Redirect::notAuthorized();
+        }
+    }
+
     public static function isAdmin() {
         if (!Auth::isAdmin()) {
             Redirect::notAuthorized();
