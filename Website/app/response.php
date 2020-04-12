@@ -8,41 +8,42 @@ class Response
 		], $fields));
 	}
 
+	public static function view($viewName, $data = []) {
+		$html = blade()->run($viewName, $data);
+
+		return Response::success([
+			"html" => $html,
+		]);
+	}
+
 	public static function success($fields = [])
 	{
-		echo Response::create(true, 200, $fields);
-		die();
+		return Response::create(true, 200, $fields);
 	}
 
 	public static function fail($fields = [])
 	{
-		echo Response::create(false, 200, $fields);
-		die();
+		return Response::create(false, 200, $fields);
 	}
 
 	public static function badRequest()
 	{
-		echo Response::create(false, 400);
-		die();
+		return Response::create(false, 400);
 	}
 
 	public static function NotAuthorized() {
-		echo Response::create(false, 401);
-		die();
+		return Response::create(false, 401);
 	}
 
 	public static function notFound() {
-		echo Response::create(false, 404);
-		die();
+		return Response::create(false, 404);
 	}
 
 	public static function locked() {
-		echo Response::create(false, 423);
-		die();
+		return Response::create(false, 423);
 	}
 
 	public static function internalServerError() {
-		echo Response::create(false, 500);
-		die();
+		return Response::create(false, 500);
 	}
 }

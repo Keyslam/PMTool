@@ -1,22 +1,22 @@
 <?php
 class UserController {
 	public function indexAction() {
-		Middleware::getMethod();
-		Middleware::IsUser();
+		//if (Middleware::getMethod()) { return Response::badRequest(); }
+		if (!Auth::isUser()) { return Redirect::home(); }
 
-		echo blade()->run("Home");
+		return Response::view("Home");
 	}
 	
 	public function signupAction() {
-		Middleware::getMethod();
-		Middleware::IsUser();
+		//Middleware::getMethod();
+		if (!Auth::isUser()) { return Redirect::home(); }
 
-		echo blade()->run("GameSignup");
+		return Response::view("GameSignup");
 	}
 
 	public function statisticsAction() {
-		Middleware::getMethod();
-		Middleware::IsUser();
+		//Middleware::getMethod();
+		if (!Auth::isUser()) { return Redirect::home(); }
 
 		try {
 			$stmt = DB::Connection()->prepare("SELECT AmountWon, HandsWon, HandsPlayed FROM GameStatistics WHERE UserID = :UserID");
@@ -29,23 +29,23 @@ class UserController {
 					$averageHandsWon = round($results["HandsWon"]/$results["HandsPlayed"] * 100);
 				}
 
-				echo blade()->run("UserStatistics", [
+				return Response::view("UserStatistics", [
 					"amountWon" => $results["AmountWon"],
 					"handsWon" => $results["HandsWon"],
 					"handsPlayed" => $results["HandsPlayed"],
 					"averageHandsWon" => $averageHandsWon,
 				]);
 			} else {
-				Redirect::internalServerError();
+				Response::internalServerError();
 			}
 		} catch (Exception $exception) {
-			Redirect::internalServerError();
+			Response::internalServerError();
 		}
 	}
 
 	public function logoutGETAction() {
-		Middleware::getMethod();
-		Middleware::IsUser();
+		//Middleware::getMethod();
+		if (!Auth::isUser()) { return Redirect::home(); }
 
 		unset($_SESSION["user_id"]);
 		unset($_SESSION["user_is_admin"]);

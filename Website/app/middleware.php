@@ -13,31 +13,31 @@ class Middleware {
 
     public static function isUser() {
         if (!Auth::isUser()) {
-            Redirect::notAuthorized();
+            return Response::notAuthorized();
         }
     }
 
     public static function isAdmin() {
         if (!Auth::isAdmin()) {
-            Redirect::notAuthorized();
+            return Response::notAuthorized();
         }
     }
 
     public static function isLoggedIn(){
         if (!Auth::isLoggedIn()){
-            Redirect::notAuthorized();
+            return Response::notAuthorized();
         }
     }
 
     public static function postMethod() {
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
-            Redirect::badRequest();
+            return Response::badRequest();
         }
     }
 
     public static function getMethod() {
         if ($_SERVER["REQUEST_METHOD"] !== "GET") {
-            Redirect::badRequest();
+            return Response::badRequest();
         }
     }
 }

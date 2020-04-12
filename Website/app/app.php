@@ -10,7 +10,6 @@ include "app/Controllers/HomeController.php";
 include "app/Controllers/AdminController.php";
 include "app/Controllers/UserController.php";
 include "app/Controllers/TournamentController.php";
-include "app/Controllers/ErrorController.php";
 include "app/Controllers/TestController.php";
 
 // Load helpers

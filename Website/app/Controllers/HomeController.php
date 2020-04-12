@@ -4,29 +4,30 @@ class HomeController
 {
 	public function indexAction()
 	{
-		Middleware::login();
-		echo blade()->run("Home");
+		//Middleware::login();
+
+		return Response::view("Home");
 	}
 
 	public function loginAction()
 	{
-		Middleware::login();
+		//Middleware::login();
 
 		$flash = Flash::get();
 
-		echo blade()->run("Login", [
+		return Response::view("Login", [
 			"flash" => $flash,
 		]);
 	}
 
 	public function loginPOSTAction()
 	{
-		Middleware::postMethod();
-		Middleware::login();
+		if (Middleware::postMethod()) { return Response::badRequest(); }
+		//Middleware::login();
 
 		$username = isset($_POST["username"]) ? trim(filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING)) : "";
 		if ($username == "") {
-			Redirect::badRequest();
+			Response::badRequest();
 		}
 		try {
 			$stmt = DB::Connection()->prepare("SELECT Password FROM User WHERE UserName = :username");
@@ -67,7 +68,7 @@ class HomeController
 				Redirect::login();
 			}
 		} catch (Exception $exception) {
-			Redirect::internalServerError();
+			Response::internalServerError();
 		}
 	}
 
@@ -75,7 +76,7 @@ class HomeController
 	{
 		Middleware::login();
 		$flash = Flash::get();
-		echo blade()->run("Register", [
+		return Response::view("Register", [
 			"flash" => $flash
 		]);
 	}
@@ -87,12 +88,12 @@ class HomeController
 
 		$username = isset($_POST["username"]) ? trim(filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING)) : "";;
 		if ($username == "") {
-			Redirect::badRequest();
+			Response::badRequest();
 		}
 
 		$password = isset($_POST["password"]) ? password_hash(trim(filter_input(INPUT_POST, "password", FILTER_SANITIZE_STRING)), PASSWORD_DEFAULT) : ""; // 0 = POST
 		if ($password == "") {
-			Redirect::badRequest();
+			Response::badRequest();
 		}
 
 		$adminToken = isset($_POST['adminToken']) ? trim(filter_input(INPUT_POST, "adminToken", FILTER_SANITIZE_STRING)) : "";
@@ -106,7 +107,7 @@ class HomeController
 					Redirect::register();
 				}
 			} catch (Exception $exception) {
-				Redirect::internalServerError();
+				Response::internalServerError();
 			}
 		}
 
@@ -141,7 +142,7 @@ class HomeController
 				}
 			} catch (Exception $exception) {
 				echo $exception;
-				Redirect::internalServerError();
+				Response::internalServerError();
 			}
 		} else {
 			Flash::put([
@@ -152,7 +153,7 @@ class HomeController
 	}
 
 	public function activeGameAction() {
-		echo blade()->run("ActiveGame");
+		return Response::view("ActiveGame");
 	}
 }
 ?>
