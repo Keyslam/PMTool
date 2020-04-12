@@ -22,7 +22,7 @@ class HomeController
 
 	public function loginPOSTAction()
 	{
-		if (Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
 		//Middleware::login();
 
 		$username = isset($_POST["username"]) ? trim(filter_input(INPUT_POST, "username", FILTER_SANITIZE_STRING)) : "";
