@@ -1,4 +1,4 @@
-<input id="game-id" type="text" value="{{$tournamentID}}" readonly hidden>
+<input id="tournament-id" type="text" value="{{$tournamentID}}" readonly hidden>
 <div class="col s3">
     <div class="row">
         <label for="start-date">Toernooi datum</label>
@@ -14,7 +14,7 @@
                 @foreach($playerList as $player)
                     <li class="collection-item">{{$player["UserName"]}}<input type="text" value="{{$player["ID"]}}"
                                                                               hidden>
-                        <button><i class="material-icons small">close</i></button>
+                        <i class="material-icons small remove-player right" data-id = {{$player["ID"]}} class="remove-player">close</i>
                     </li>
                 @endforeach
             @else()
@@ -112,9 +112,11 @@
 
 <script>
     var gameRemovedEvent = new Event("gameRemoved");
-
+    var userSignupChangedEvent = new Event("userSignupChanged");
+    
     $(document).ready(function () {
         $("#remove-game").on("click", removeGame);
+        $(".remove-player").on("click", removePlayer);
     })
 
     function removeGame(event) {
@@ -124,7 +126,7 @@
             url: "@asset('Tournament/RemoveGame')",
             dataType: "json",
             data: {
-                "id": $("#game-id").val()
+                "id": $("#tournament-id").val()
             }
         })
         .done(function (response) {
@@ -132,6 +134,27 @@
                 document.dispatchEvent(gameRemovedEvent);
             } else {
                 serverError();
+            }
+        })
+        .fail(serverError);
+    }
+
+    function removePlayer(event){
+        var id = $(event.target).closest("i").data("id");
+        $.ajax({
+            method: "POST",
+            url: "@asset('Tournament/RemoveFromGame')",
+            dataType: "json",
+            data: {
+                "TournamentID": $("#tournament-id").val(),
+                "id" : $(event.target).closest("i").data("id")
+            }
+        })
+        .done(function(response) {
+            if (response.success) {
+                document.dispatchEvent(userSignupChangedEvent);
+            } else {
+                serverError(response);
             }
         })
         .fail(serverError);
