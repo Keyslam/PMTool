@@ -1,5 +1,5 @@
 <input id="tournament-id" type="text" value="{{$tournamentID}}" readonly hidden>
-<div class="col s3">
+<div class="col s4">
     <div class="row">
         <label for="start-date">Toernooi datum</label>
         <input id="start-date" type="text" value="{{$settings["time_part"]}}" class="datepicker">
@@ -26,7 +26,7 @@
 
 </div>
 
-<div class="col s6">
+<div class="col s8">
     <form>
         <div class="row">
             <div class="col s6">
