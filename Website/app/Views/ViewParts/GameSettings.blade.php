@@ -2,9 +2,9 @@
 <div class="col s4">
     <div class="row">
         <label for="start-date">Toernooi datum</label>
-        <input id="start-date" type="text" value="{{$settings["time_part"]}}" class="datepicker">
+        <input id="start-date" type="text" value="{{$dateTime["StartDate"]}}" class="datepicker">
         <label for="start-time">Start tijd</label>
-        <input id="start-time" type="text" value="{{$settings["date_part"]}}" class="timepicker">
+        <input id="start-time" type="text" value="{{$dateTime["StartTime"]}}" class="timepicker">
     </div>
 
     <div class="row">
@@ -14,7 +14,8 @@
                 @foreach($playerList as $player)
                     <li class="collection-item">{{$player["UserName"]}}<input type="text" value="{{$player["ID"]}}"
                                                                               hidden>
-                        <i class="material-icons small remove-player right" data-id = {{$player["ID"]}} style="cursor: pointer;">close</i>
+                        <i class="material-icons small remove-player right" data-id={{$player["ID"]}} style="cursor:
+                           pointer;">close</i>
                     </li>
                 @endforeach
             @else()
@@ -33,10 +34,10 @@
                 <label for="chips">Chips</label>
                 <div id="chips" class="card" style="overflow: scroll; max-height: 700px">
                     <div class="card-content">
-                        @for ($i = 0; $i < 10; $i++)
-                            <label for="chip-{{ $i }}">Chip {{ $i }}</label>
-                            <input id="chip-{{ $i }}" type="number" value="2,50">
-                        @endfor
+                        @foreach ($settings["chipsList"] as $chip=>$value)
+                            <label for="chip-{{ $chip }}">{{$chip}}</label>
+                            <input id="chip-{{ $chip}}" type="number" value="{{$value}}">
+                        @endforeach
                     </div>
                 </div>
 
@@ -47,24 +48,21 @@
                 <div id="blinds" class="card">
                     <div class="card-content">
                         <label for="big-blind">Big blind</label>
-                        <input id="big-blind" type="number" value="2,50">
+                        <input id="big-blind" type="number" value="{{$settings["bigBlind"]}}">
 
                         <label for="small-blind">Small blind</label>
-                        <input id="small-blind" type="number" value="1,20">
+                        <input id="small-blind" type="number" value="{{$settings["bigBlind"]/2}}">
                     </div>
                 </div>
 
                 <label for="price-pool">Pot</label>
                 <div id="price-pool" class="card">
                     <div class="card-content">
-                        <label for="first-place">1ste plaats</label>
-                        <input id="first-place" type="text" value="60%">
+                        @foreach($settings["potDivision"] as $place=>$amount)
+                            <label for="{{$place."-Plaats"}}">{{$place. " Plaats"}}</label>
+                            <input id="{{$place."-Plaats"}}" type="text" value="{{$amount}}">
+                        @endforeach
 
-                        <label for="second-place">2de plaats</label>
-                        <input id="second-place" type="text" value="30%">
-
-                        <label for="third-place">3de plaats</label>
-                        <input id="third-place" type="text" value="10%">
                     </div>
                 </div>
 
@@ -72,7 +70,7 @@
                 <div id="game-behaviour" class="card">
                     <div class="card-content">
                         <label for="round-time">Ronde tijd</label>
-                        <input id="round-time" type="number" value="30">
+                        <input id="round-time" type="number" value="{{$settings["roundTime"]}}">
                     </div>
                 </div>
             </div>
@@ -80,7 +78,9 @@
 
         <div class="row">
             <div class="col s6 offset-s6">
-                <button class="btn waves-effect waves-light" style="width: 100%">Wijzigingen opslaan</button>
+                <button id="save-settings" class="btn waves-effect waves-light" style="width: 100%">Wijzigingen
+                    opslaan
+                </button>
             </div>
         </div>
 
@@ -108,6 +108,7 @@
     $(document).ready(function () {
         $("#remove-game").on("click", removeGame);
         $(".remove-player").on("click", removePlayer);
+        $("#save-settings").on("click", saveSettings)
         $("#start-game").on("click", startGame);
     })
 
@@ -144,15 +145,15 @@
                 "id": $("#tournament-id").val()
             }
         })
-        .done(serverSuccess(function(response) {
-            wsc.send(JSON.stringify({
-				"command": "gameRemoved", 
-			}));
-        }))
-        .fail(serverError);
+            .done(serverSuccess(function (response) {
+                wsc.send(JSON.stringify({
+                    "command": "gameRemoved",
+                }));
+            }))
+            .fail(serverError);
     }
 
-    function removePlayer(event){
+    function removePlayer(event) {
         var tournamentID = $("#tournament-id").val();
         var userID = $(event.target).closest("i").data("id")
 
@@ -165,9 +166,46 @@
                 "id": userID,
             }
         })
-        .done(serverSuccess(function(response) {
+            .done(serverSuccess(function (response) {
+                wsc.send(JSON.stringify({
+                    "command": "userSignout",
+                }));
+            }))
+            .fail(serverError);
+    }
+
+    function saveSettings(event) {
+        event.preventDefault();
+
+        $.ajax({
+            method: "POST",
+            url: "@asset('Tournament/UpdateSettings')",
+            dataType: "json",
+            data: {
+                "id": $("#tournament-id").val(),
+                "startTime": $("#start-time").val(),
+                "startDate": $("#start-date").val(),
+                "settings": {
+                    "bigBlind": $("#big-blind").val(),
+                    "chipsList": {
+                        "Wit": $("#chip-Wit").val(),
+                        "Rood": $("#chip-Rood").val(),
+                        "Blauw": $("#chip-Blauw").val(),
+                        "Zwart": $("#chip-Zwart").val(),
+                        "Groen": $("#chip-Groen").val()
+                    },
+                    "roundTime": $("#round-time").val(),
+                    "potDivision": {
+                        "1ste": $("#1ste-Plaats").val(),
+                        "2de": $("#2de-Plaats").val(),
+                        "3de": $("#3de-Plaats").val(),
+                    }
+                }
+            }
+        })
+        .done(serverSuccess(function (response) {
             wsc.send(JSON.stringify({
-                "command": "userSignout",
+                "command": "settingsChanged",
             }));
         }))
         .fail(serverError);

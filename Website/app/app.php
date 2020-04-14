@@ -20,6 +20,9 @@ include "app/redirect.php";
 include "app/auth.php";
 include "app/response.php";
 
+// Load Objects
+include "app/Objects/GameSettings.php";
+
 function path() {
 	return "http://localhost/PMTool/Website/";
 }
