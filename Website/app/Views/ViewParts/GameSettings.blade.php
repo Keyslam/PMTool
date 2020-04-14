@@ -2,9 +2,9 @@
 <div class="col s4">
     <div class="row">
         <label for="start-date">Toernooi datum</label>
-        <input id="start-date" type="text" value="{{$dateTime["StartTime"]}}" class="datepicker">
+        <input id="start-date" type="text" value="{{$dateTime["StartDate"]}}" class="datepicker">
         <label for="start-time">Start tijd</label>
-        <input id="start-time" type="text" value="{{$dateTime["StartDate"]}}" class="timepicker">
+        <input id="start-time" type="text" value="{{$dateTime["StartTime"]}}" class="timepicker">
     </div>
 
     <div class="row">
@@ -156,38 +156,40 @@
             .fail(serverError);
     }
 
-    function saveSettings() {
+    function saveSettings(event) {
+        event.preventDefault();
+
         $.ajax({
             method: "POST",
             url: "@asset('Tournament/UpdateSettings')",
             dataType: "json",
             data: {
-                "ID": $("#tournament-id").val(),
+                "id": $("#tournament-id").val(),
                 "startTime": $("#start-time").val(),
-                "startDate": $("#startDate").val(),
+                "startDate": $("#start-date").val(),
                 "settings": {
                     "bigBlind": $("#big-blind").val(),
                     "chipsList": {
-                        "Wit": $("#Wit").val(),
-                        "Rood": $("#Rood").val(),
-                        "Blauw": $("#Blauw").val(),
-                        "Zwart": $("#Zwart").val(),
-                        "Groen": $("#Groen").val()
+                        "Wit": $("#chip-Wit").val(),
+                        "Rood": $("#chip-Rood").val(),
+                        "Blauw": $("#chip-Blauw").val(),
+                        "Zwart": $("#chip-Zwart").val(),
+                        "Groen": $("#chip-Groen").val()
                     },
                     "roundTime": $("#round-time").val(),
                     "potDivision": {
-                        "1ste Plaats": $("#1ste-Plaats").val(),
-                        "2de Plaats": $("#2de-Plaats").val(),
-                        "3de Plaats": $("#3de-Plaats").val(),
+                        "1ste": $("#1ste-Plaats").val(),
+                        "2de": $("#2de-Plaats").val(),
+                        "3de": $("#3de-Plaats").val(),
                     }
                 }
             }
         })
-            .done(serverSuccess(function (response) {
-                wsc.send(JSON.stringify({
-                    "command": "settingsChanged",
-                }));
-            }))
-            .fail(serverError);
+        .done(serverSuccess(function (response) {
+            wsc.send(JSON.stringify({
+                "command": "settingsChanged",
+            }));
+        }))
+        .fail(serverError);
     }
 </script>
