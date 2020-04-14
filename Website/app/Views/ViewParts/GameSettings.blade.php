@@ -1,5 +1,5 @@
 <input id="tournament-id" type="text" value="{{$tournamentID}}" readonly hidden>
-<div class="col s4">
+<div class="col l4">
     <div class="row">
         <label for="start-date">Toernooi datum</label>
         <input id="start-date" type="text" value="{{$dateTime["StartDate"]}}" class="datepicker">
@@ -27,12 +27,12 @@
 
 </div>
 
-<div class="col s8">
+<div class="col l8">
     <form>
         <div class="row">
-            <div class="col s6">
+            <div class="col l6">
                 <label for="chips">Chips</label>
-                <div id="chips" class="card" style="overflow: scroll; max-height: 700px">
+                <div id="chips" class="card" style="max-height: 700px">
                     <div class="card-content">
                         @foreach ($settings["chipsList"] as $chip=>$value)
                             <label for="chip-{{ $chip }}">{{$chip}}</label>
@@ -43,7 +43,7 @@
 
             </div>
 
-            <div class="col s6">
+            <div class="col l6">
                 <label for="blinds">Blinds</label>
                 <div id="blinds" class="card">
                     <div class="card-content">
@@ -77,27 +77,25 @@
         </div>
 
         <div class="row">
-            <div class="col s6 offset-s6">
-                <button id="save-settings" class="btn waves-effect waves-light" style="width: 100%">Wijzigingen
-                    opslaan
-                </button>
+            <div class="col l6 offset-l6">
+                <button class="btn waves-effect waves-light" style="width: 100%">Wijzigingen opslaan</button>
             </div>
         </div>
 
         <br>
 
         <div class="row">
-            <div class="col s6">
+            <div class="col l6">
                 <button class="btn waves-effect waves-light" style="width: 100%">Pauzeren</button>
             </div>
         </div>
 
         <div class="row">
-            <div class="col s6">
+            <div class="col l6">
                 <button id="start-game" class="btn waves-effect waves-light" style="width: 100%">Spel starten</button>
             </div>
 
-            <div class="col s6">
+            <div class="col l6">
                 <button id="remove-game" class="btn waves-effect waves-light" style="width: 100%">Spel verwijderen</button>
             </div>
         </div>

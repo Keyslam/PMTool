@@ -3,7 +3,7 @@
         <div class="row">
     @endif
 
-    <div class="col s3">
+    <div class="col l3">
         <div class="card hoverable table-select" data-num="{{ $i }}">
             <div class="card-content">
                 <span class="card-title">Tafel {{ $i + 1 }}</span>

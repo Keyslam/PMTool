@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col s12">
+    <div class="col l12">
         <label for="player-list">Spelers</label>
         <ul id="player-list" class="collection">
             @if(count($playerList) > 0)
@@ -14,7 +14,7 @@
 </div>
 
 <div class="row">
-    <div class="col s12">
+    <div class="col l12">
         <input id="tournament-id" type="text" value="{{$tournamentID}}" hidden>
 
         @if($isJoined == 0)
