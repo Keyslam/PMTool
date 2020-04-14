@@ -56,6 +56,7 @@
 
 			function serverSuccess(callback) {
 				return function(response) {
+					console.log(response)
 					if (response.success) {
 						callback(response);
 					} else {
@@ -65,7 +66,7 @@
 			}
 
 			function serverError(response) {
-				if (response.notify) {
+				if (!response.silent) {
 					alert("Er is iets mis gegaan.");
 					console.log(response);
 				}

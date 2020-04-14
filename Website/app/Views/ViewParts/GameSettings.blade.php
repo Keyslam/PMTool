@@ -12,10 +12,15 @@
         <ul id="player-list" class="collection">
             @if($playerList > 0)
                 @foreach($playerList as $player)
-                    <li class="collection-item">{{$player["UserName"]}}<input type="text" value="{{$player["ID"]}}"
-                                                                              hidden>
-                        <i class="material-icons small remove-player right" data-id={{$player["ID"]}} style="cursor:
-                           pointer;">close</i>
+                    <li class="collection-item">
+                        {{$player["UserName"]}}
+                        <input type="text" value="{{$player["ID"]}}" hidden>
+                    
+                        <i class="material-icons small remove-player right" data-id={{$player["ID"]}} style="cursor: pointer;">close</i>
+
+                        @if ($player['HasRebought'])
+				            <i class="material-icons right">attach_money</i>
+			            @endif
                     </li>
                 @endforeach
             @else()
@@ -51,7 +56,7 @@
                         <input id="big-blind" type="number" value="{{$settings["bigBlind"]}}">
 
                         <label for="small-blind">Small blind</label>
-                        <input id="small-blind" type="number" value="{{$settings["bigBlind"]/2}}">
+                        <input id="small-blind" type="number" value="{{round($settings["bigBlind"]/2 * 100) / 100 }}">
                     </div>
                 </div>
 
@@ -78,7 +83,7 @@
 
         <div class="row">
             <div class="col l6 offset-l6">
-                <button class="btn waves-effect waves-light" style="width: 100%">Wijzigingen opslaan</button>
+                <button class="btn waves-effect waves-light" id="save-settings" style="width: 100%">Wijzigingen opslaan</button>
             </div>
         </div>
 

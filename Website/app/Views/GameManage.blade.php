@@ -64,6 +64,7 @@
 				updateGamesettings();
 			}
 
+			socketCommands["userChanged"] = updateGamesettings;
 			socketCommands["userSignup"] = updateGamesettings;
 			socketCommands["userSignout"] = updateGamesettings;
 			socketCommands["settingsChanged"] = updateGamesettings;
