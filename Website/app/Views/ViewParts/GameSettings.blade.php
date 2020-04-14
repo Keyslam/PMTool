@@ -14,7 +14,7 @@
                 @foreach($playerList as $player)
                     <li class="collection-item">{{$player["UserName"]}}<input type="text" value="{{$player["ID"]}}"
                                                                               hidden>
-                        <i class="material-icons small remove-player right" data-id = {{$player["ID"]}} class="remove-player">close</i>
+                        <i class="material-icons small remove-player right" data-id = {{$player["ID"]}} style="cursor: pointer;">close</i>
                     </li>
                 @endforeach
             @else()

@@ -6,7 +6,6 @@
             @if (Auth::isLoggedIn())
                 @if (Auth::isAdmin())
                     <li><a href="{{ router()->getCurrentUrl() }}/Admin/ManageGames">Spellen beheren</a></li>
-                    <li><a href="{{ router()->getCurrentUrl() }}/Admin/Statistics">Statistieken</a></li>
                 @else
                     <li><a href="{{ router()->getCurrentUrl() }}/User/Signup">Aanmelden voor spel</a></li>
                     <li><a href="{{ router()->getCurrentUrl() }}/User/Statistics">Statistieken</a></li>
