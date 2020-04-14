@@ -24,9 +24,9 @@
                 @else
                     <li><a href="{{ router()->getCurrentUrl() }}/User/LogoutGET">Uitloggen</a></li>
                 @endif
-
-                <li><a href="{{ router()->getCurrentUrl() }}/Home/ActiveGame">Actieve spel</a></li>
             @endif
+
+            <li><a href="{{ router()->getCurrentUrl() }}/Home/ActiveGame">Actieve spel</a></li>
         </ul>
 	</div>
 </nav>

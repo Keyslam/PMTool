@@ -21,13 +21,28 @@
     @endif
 @endfor
 
+@if(count($tables) == 0)
+    <b>Er zijn nog geen tables ingedeeld</b>
+@endif
+
 <script>
     $(document).ready(function() {
         $(".table-select").on("click", function(event) {
             let elem = $(event.target).closest(".table-select");
             let tableNum = elem.data("num");
 
-            alert(tableNum);
+            $.ajax({
+            	method: "POST",
+				url: "@asset('Table/Select')",
+				dataType: "json",
+                data: {
+                    "table_num": tableNum,
+                }
+			})
+			.done(serverSuccess(function(response) {
+				window.location.href = "http://localhost/PMTool/Website/Table";
+			}))
+			.fail(serverError);         
         })
     })
 </script>
