@@ -64,6 +64,28 @@
 				updateGamesettings();
 			}
 
+			socketCommands["gameStart"] = updateGamesettings;
+			socketCommands["gameEnd"] = function() {
+				id = null;
+				updateScheduledGames();
+				updateGamesettings();
+			};
+			socketCommands["roundStart"] = updateGamesettings;
+			socketCommands["roundEnd"] = updateGamesettings;
+			socketCommands["roundPause"] = function(data) {
+				$.ajax({
+					method: "POST",
+					url: "@asset('Tournament/PauseRound')",
+					dataType: "json",
+					data: {
+						"tournamentID": data["tournamentID"],
+					}
+				}).done(serverSuccess(function(response) {
+					updateGamesettings();
+				}))
+				.fail(serverError);
+			}
+
 			socketCommands["userChanged"] = updateGamesettings;
 			socketCommands["userSignup"] = updateGamesettings;
 			socketCommands["userSignout"] = updateGamesettings;

@@ -9,6 +9,13 @@ let commands = {
   "userSignout": userSignout,
   "settingsChanged": settingsChanged,
   "userChanged": userChanged,
+  
+  "gameStart": gameStart,
+  "gameEnd": gameEnd,
+
+  "roundStart": roundStart,
+  "roundPause": roundPause,
+  "roundEnd": roundEnd,
 }
 
 function heartbeat() {
@@ -95,5 +102,46 @@ function settingsChanged(ws, data) {
 function userChanged(ws, data) {
   broadcast(JSON.stringify({
     "command": "userChanged",
+  }))
+}
+
+function gameStart(ws, data) {
+  broadcast(JSON.stringify({
+    "command": "gameStart",
+  }))
+}
+
+function gameEnd(ws, data) {
+  broadcast(JSON.stringify({
+    "command": "gameEnd",
+  }))
+}
+
+function roundStart(ws, data) {
+  var timeInS = data["time"] * 60
+  var timeInMs = timeInS * 1000
+  
+  setTimeout(function() {
+    broadcast(JSON.stringify({
+      "command": "roundPause",
+      "time": timeInS,
+      "tournamentID": data["tournamentID"],
+    }))
+  }, timeInMs)
+
+  broadcast(JSON.stringify({
+    "command": "roundStart",
+  }))
+}
+
+function roundPause(ws, data) {
+  broadcast(JSON.stringify({
+    "command": "roundPause",
+  }))
+}
+
+function roundEnd(ws, data) {
+  broadcast(JSON.stringify({
+    "command": "roundEnd",
   }))
 }
