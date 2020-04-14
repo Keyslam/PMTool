@@ -1,34 +1,74 @@
 <?php
 class UserController {
 	public function indexAction() {
-        Middleware::getMethod();
-        Middleware::IsUser();
+		if (!Middleware::getMethod()) { return Response::badRequest(); }
+		if (!Auth::isUser()) { return Redirect::home(); }
 
-		echo blade()->run("Home");
-    }
-    
-    public function signupAction() {
-        Middleware::getMethod();
-        Middleware::IsUser();
+		return Response::view("Home");
+	}
+	
+	public function signupAction() {
+		if (!Middleware::getMethod()) { return Response::badRequest(); }
+		if (!Auth::isUser()) { return Redirect::home(); }
 
-        echo blade()->run("GameSignup");
-    }
+		return Response::view("GameSignup");
+	}
 
-    public function statisticsAction() {
-        Middleware::getMethod();
-        Middleware::IsUser();
+	public function statisticsAction() {
+		if (!Middleware::getMethod()) { return Response::badRequest(); }
+		if (!Auth::isUser()) { return Redirect::home(); }
 
-        echo blade()->run("ViewParts.Todo"); // TODO
-    }
+		try {
+			$stmt = DB::Connection()->prepare("SELECT AmountWon, HandsWon, HandsPlayed FROM GameStatistics WHERE UserID = :userID");
+			$stmt->bindValue("userID", $_SESSION["user_id"]);
+			$stmt->execute();
+			$results = $stmt->fetchAll();
+				
+			$amountWon    = 0;
+			$handsWon     = 0;
+			$handsPlayed  = 0;
+			
+			$gamesPlayed  = 0;
+			$gameWinrate  = 0;
+			$handsWinrate = 0;
 
-    public function logoutGETAction() {
-        Middleware::getMethod();
-        Middleware::IsUser();
+			foreach ($results as $result) {
+				$amountWon += $result["AmountWon"];
+				$handsWon += $result["HandsWon"];
+				$handsPlayed += $result["HandsPlayed"];
+			}
 
-        unset($_SESSION["user_id"]);
-        unset($_SESSION["user_is_admin"]);
+			$gamesPlayed = count($results);
+			
+			if ($gamesPlayed != 0) {
+				$gameWinrate = round($amountWon / $gamesPlayed * 100);
+			}
+			
+			if ($handsPlayed != 0) {
+				$handsWinrate = round($handsWon / $handsPlayed * 100);
+			}
 
-        Redirect::home();
-    }
+			return Response::view("UserStatistics", [
+				"amountWon" => $amountWon,
+				"gamesPlayed" => $gamesPlayed,
+				"gamesWinrate" => $gameWinrate,
+				"handsWon" => $handsWon,
+				"handsPlayed" => $handsPlayed,
+				"handsWinrate" => $handsWinrate,
+			]);
+		} catch (Exception $exception) {
+			return Response::internalServerError($exception);
+		}
+	}
+
+	public function logoutGETAction() {
+		if (!Middleware::getMethod()) { return Response::badRequest(); }
+		if (!Auth::isUser()) { return Redirect::home(); }
+
+		unset($_SESSION["user_id"]);
+		unset($_SESSION["user_is_admin"]);
+
+		Redirect::home();
+	}
 }
 ?>

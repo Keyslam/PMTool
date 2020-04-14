@@ -3,68 +3,65 @@
 @section("title", "Join Tournament")
 
 @section("constrained-content")
-    <div class="row">
-        <div class="col s3">
-            <label for="scheduled-games">Ingeplande spellen</label>
-            <div id="scheduled-games">
+	<div class="row">
+		<div class="col s3">
+			<label for="scheduled-games">Ingeplande spellen</label>
+			<div id="scheduled-games">
+			</div>
+		</div>
 
-            </div>
-            <button id="game-list-refresh" class="btn  modal-trigger waves-effect waves-light"
-                style="width: 100%">Refresh
-            </button>
-        </div>
+		<div class="col s9">
+			<div id="game-info">
 
-        <div id="game-info">
-
-        </div>
-    </div>
+			</div>
+		</div> 
+	</div>
 @endsection
 
 @section("scripts")
-    <script>
-        let selectedTournamentID = null;
+	<script>
+		let selectedTournamentID = null;
 
-        $(document).ready(function () {
-            document.addEventListener("userSignupChanged", function() {
-                selectGame();
-            })
-            
-            updateScheduledGames();
-            $("#game-list-refresh").on("click", updateScheduledGames);
-            $("#scheduled-games").on("click", "li", function(event) {
-                selectedTournamentID = $(event.target).closest("li").data("id");
-                selectGame();
-            });
+		$(document).ready(function () {
+			document.addEventListener("userSignupChanged", selectGame)
+			
+			updateScheduledGames();
+			$("#scheduled-games").on("click", "li", function(event) {
+				selectedTournamentID = $(event.target).closest("li").data("id");
+				selectGameView($(event.target).closest("li"));
+				selectGame();
+			});
+		});
 
-        });
+		function updateScheduledGames() {
+			$.ajax({
+				method: "POST",
+				url: "@asset('Tournament/ListScheduled')",
+				dataType: "json",
+			})
+			.done(serverSuccess(function(response) {
+				$("#scheduled-games").html(response.html);
+			}))
+			.fail(serverError);
+		}
 
-        function updateScheduledGames() {
-            $.ajax({
-                method: "POST",
-                url: "@asset('Tournament/ListScheduled')",
-                dataType: "html",
-            })
-                .done(function (data) {
-                    $("#scheduled-games").html(data);
-                })
-                .fail(function () {
-                    alert("Something went wrong ;-;");
-                });
-        }
+		function selectGame(event) {
+			if (selectedTournamentID === null) {
+				$("#game-info").html("");
+			};
 
-        function selectGame(event) {
-            $.ajax({
-                method: "POST",
-                url: "@asset('Tournament/SelectGame')",
-                dataType: "html",
-                data: {
-                    "id": selectedTournamentID,
-                }
-            }).done(function (data) {
-                $("#game-info").html(data);
-            }).fail(function () {
-                alert('De toernooi data kon niet worden opgehaald');
-            })
-        }
-    </script>
+			$.ajax({
+				method: "POST",
+				url: "@asset('Tournament/SelectGame')",
+				dataType: "json",
+				data: {
+					"id": selectedTournamentID,
+				}
+			})
+			.done(serverSuccess(function(response) {
+				$("#game-info").html(response.html);
+			}))
+			.fail(serverError);
+		}
+	</script>
 @endsection

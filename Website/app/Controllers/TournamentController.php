@@ -1,41 +1,37 @@
 <?php
-
 class TournamentController
 {
 	public function ListScheduledAction()
 	{
-		Middleware::postMethod();
-		Middleware::isLoggedIn();
+		if (!Middleware::postMethod()) { return Response::badRequest(); };
+		if (!Middleware::isLoggedIn()) { return Response::notAuthorized(); };
 
 		try {
 			$stmt = DB::Connection()->prepare("SELECT ID, StartTime FROM Tournament WHERE HasEnded='false' ORDER BY StartTime");
-			if ($stmt->execute()) {
-				$results = $stmt->fetchAll();
+			$stmt->execute();
+			$results = $stmt->fetchAll();
 
-				echo blade()->run("ViewParts.ScheduledGamesList", [
-					"scheduledGames" => $results,
-				]);
-			} else {
-				Redirect::internalServerError();
-			}
+			return Response::view("ViewParts.ScheduledGamesList", [
+				"scheduledGames" => $results,
+			]);
 		} catch (Exception $exception) {
-			Redirect::internalServerError();
+			Response::internalServerError($exception);
 		}
 	}
 
 	public function AddNewAction()
 	{
-		Middleware::postMethod();
-		Middleware::isAdmin();
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isAdmin()) { return Response::notAuthorized(); }
 
 		$time = isset($_POST["time"]) ? trim(filter_input(INPUT_POST, "time", FILTER_SANITIZE_STRING)) : "";
 		if ($time == "") {
-			Response::fail();
+			return Response::fail();
 		}
 
 		$date = isset($_POST["date"]) ? trim(filter_input(INPUT_POST, "date", FILTER_SANITIZE_STRING)) : "";
 		if ($date == "") {
-			Response::fail();
+			return Response::fail();
 		}
 
 		try {
@@ -43,25 +39,25 @@ class TournamentController
 			$stmt->bindValue("startTime", $date . " " . $time . ":00");
 			$stmt->execute();
 			if ($stmt->rowCount() == 1) {
-				Response::success([
+				return Response::success([
 					"addedTournamentID" => DB::Connection()->lastInsertID(),
 				]);
 			} else {
-				Response::fail();
+				return Response::fail();
 			}
 		} catch (Exception $exception) {
-			Response::internalServerError();
+			return Response::internalServerError($exception);
 		}
 	}
 
 	public function RemoveGameAction()
 	{
-		Middleware::postMethod();
-		Middleware::isAdmin();
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isAdmin()) { return Response::notAuthorized(); }
 
 		$id = isset($_POST["id"]) ? trim(filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING)) : "";
-		if ($id = "") {
-			Redirect::badRequest();
+		if ($id == "") {
+			return Response::badRequest();
 		}
 
 		try {
@@ -69,74 +65,78 @@ class TournamentController
 			$stmt->bindValue(":id", $id);
 			$stmt->execute();
 
-			if($stmt->rowCount() == 1){
-				echo 1;
-			} elseif ($stmt->rowCount() > 1) {
-				echo 2;
+			if ($stmt->rowCount() == 1) {
+				return Response::success();
 			} else {
-				echo 0;
+				return Response::fail();
 			}
-
 		} catch (Exception $exception) {
-			Redirect::internalServerError();
+			return Response::internalServerError($exception);
 		}
 	}
 
 	public function SelectGameAction()
 	{
-		Middleware::postMethod();
-		Middleware::isLoggedIn();
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isLoggedIn()) { return Response::notAuthorized(); };
 
 		$TournamentID =  isset($_POST["id"]) ? trim(filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING)) : "";
 		if ($TournamentID == "") {
-			Redirect::badRequest();
+			return Response::badRequest();
 		}
 
 		try {
-			$settingStmt = DB::Connection()->prepare("SELECT Settings FROM Tournament WHERE ID = :id");
-			$settingStmt->bindValue(":id", $TournamentID);
-			$settingStmt->execute();
+			$settings = null;
+			$isJoined = false;
+			$playerList = null;
 
-			$isJoined = 0;
-
-			$isJoinedStmt = DB::Connection()->prepare("SELECT UserID FROM GameStatistics WHERE TournamentID = :tournamentID AND UserID = :userID");
-			$isJoinedStmt->bindValue("tournamentID", $TournamentID);
-			$isJoinedStmt->bindValue("userID", $_SESSION["user_id"]);
-			$isJoinedStmt->execute();
-			if($isJoinedStmt->rowCount() == 1) {
-				$isJoined =1;
-			}elseif ($isJoinedStmt->rowCount() > 1){
-				Redirect::internalServerError();
+			{
+				$stmt = DB::Connection()->prepare("SELECT Settings FROM Tournament WHERE ID = :id");
+				$stmt->bindValue(":id", $TournamentID);
+				$stmt->execute();
+				$settings = $stmt->fetchColumn();
 			}
 
-			$getPlayersStmt = DB::Connection()->prepare("SELECT UserName FROM User WHERE ID IN (SELECT UserID FROM GameStatistics WHERE TournamentID = :id)");
-			$getPlayersStmt->bindValue(":id", $TournamentID);
-			$getPlayersStmt->execute();
+			{
+				$stmt = DB::Connection()->prepare("SELECT UserID FROM GameStatistics WHERE TournamentID = :tournamentID AND UserID = :userID");
+				$stmt->bindValue("tournamentID", $TournamentID);
+				$stmt->bindValue("userID", $_SESSION["user_id"]);
+				$stmt->execute();
+				if ($stmt->rowCount() == 1) {
+					$isJoined = true;
+				}
+			}
 
-			$playerList = $getPlayersStmt->fetchAll();
-			$settings = $settingStmt->fetchColumn();
+			{
+				$stmt = DB::Connection()->prepare("SELECT UserName FROM User WHERE ID IN (SELECT UserID FROM GameStatistics WHERE TournamentID = :id)");
+				$stmt->bindValue(":id", $TournamentID);
+				$stmt->execute();
 
-			echo blade()->run("ViewParts.GameInfo", [
+				$playerList = $stmt->fetchAll();
+			}
+
+			$html = blade()->run("ViewParts.GameInfo", [
 				"isJoined" => $isJoined,
 				"tournamentID" => $TournamentID,
 				"playerList" => $playerList
 			]);
 
-
+			return Response::success([
+				"html" => $html,
+			]);
 		} catch (Exception $exception) {
-			echo $exception;
-			Redirect::internalServerError();
+			return Response::internalServerError($exception);
 		}
 	}
 
 	public function joinGameAction()
 	{
-		Middleware::postMethod();
-		Middleware::isLoggedIn();
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isLoggedIn()) { return Response::notAuthorized(); }
 
 		$TournamentID = isset($_POST["TournamentID"]) ? trim(filter_input(INPUT_POST, "TournamentID", FILTER_SANITIZE_STRING)) : "";
 		if ($TournamentID == "") {
-			echo Response::badRequest();
+			return Response::badRequest();
 		}
 
 		try {
@@ -146,22 +146,24 @@ class TournamentController
 			$stmt->execute();
 
 			if ($stmt->rowCount() == 1) {
-				echo Response::Success();
+				return Response::Success();
 			} else {
-				echo Response::Fail();
+				return Response::Fail();
 			}
+		} catch (PDOException $exception) {
+			return Response::internalServerError($exception);
 		} catch (Exception $exception) {
-			echo Response::internalServerError();
+			return Response::internalServerError($exception);
 		}
 	}
 
 	public function leaveGameAction(){
-		Middleware::postMethod();
-		Middleware::isLoggedIn();
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isLoggedIn()) { return Response::notAuthorized(); }
 
 		$TournamentID = isset($_POST["TournamentID"]) ? trim(filter_input(INPUT_POST, "TournamentID", FILTER_SANITIZE_STRING)) : "";
 		if ($TournamentID == "") {
-			Redirect::badRequest();
+			return Response::badRequest();
 		}
 
 		try{
@@ -170,46 +172,80 @@ class TournamentController
 			$stmt->bindValue("UserID", $_SESSION["user_id"]);
 			$stmt->execute();
 
-			if($stmt->rowCount() == 1){
-				echo 1;
-			}else{
-				echo 0;
+			if ($stmt->rowCount() == 1){
+				return Response::success();
+			} else {
+				return Response::fail();
 			}
+		} catch (Exception $exception){
+			return Response::internalServerError($exception);
+		}
+	}
 
-		}catch (Exception $exception){
-			Redirect::internalServerError();
+	public function removeFromGameAction(){
+		Middleware::postMethod();
+		Middleware::isAdmin();
+
+		$TournamentID = isset($_POST["TournamentID"]) ? trim(filter_input(INPUT_POST, "TournamentID", FILTER_SANITIZE_STRING)) : "";
+		if ($TournamentID == "") {
+			Response::badRequest();
+		}
+
+		$playerID = isset($_POST["id"]) ? trim(filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING)) : "";
+		if ($playerID == "") {
+			Response::badRequest();
+		}
+
+		try{
+			$stmt = DB::Connection()->prepare("DELETE FROM GameStatistics WHERE TournamentID = :TournamentID AND UserID = :UserID");
+			$stmt->bindValue("TournamentID", $TournamentID);
+			$stmt->bindValue("UserID", $playerID);
+			$stmt->execute();
+
+			if ($stmt->rowCount() == 1){
+				Response::success();
+			} else {
+				Response::fail();
+			}
+		} catch (Exception $exception){
+			Response::internalServerError();
 		}
 	}
 
 	public function SelectGameSettingsAction()
 	{
-
-		Middleware::postMethod();
-		Middleware::isAdmin();
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isAdmin()) { return Response::notAuthorized(); }
 
 		$id = isset($_POST["id"]) ? trim(filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING)) : "";
 
-		try{
-			$settingStmt = DB::Connection()->prepare("SELECT DATE( StartTime ) AS date_part, TIME( StartTime ) AS time_part, Settings FROM Tournament WHERE ID = :id");
-			$settingStmt->bindValue(":id", $id);
-			$settingStmt->execute();
+		try {
+			$settings = null;
+			$playerList = null;
 
+			{
+				$stmt = DB::Connection()->prepare("SELECT DATE( StartTime ) AS date_part, TIME( StartTime ) AS time_part, Settings FROM Tournament WHERE ID = :id");
+				$stmt->bindValue(":id", $id);
+				$stmt->execute();
 
-			$getPlayersStmt = DB::Connection()->prepare("SELECT ID, UserName FROM User WHERE ID IN (SELECT UserID FROM GameStatistics WHERE TournamentID = :id)");
-			$getPlayersStmt->bindValue(":id", $id);
-			$getPlayersStmt->execute();
+				$settings = $stmt->fetch();
+			}
+			
+			{
+				$stmt = DB::Connection()->prepare("SELECT ID, UserName FROM User WHERE ID IN (SELECT UserID FROM GameStatistics WHERE TournamentID = :id)");
+				$stmt->bindValue(":id", $id);
+				$stmt->execute();
 
-			$playerList = $getPlayersStmt->fetchAll();
-			$settings = $settingStmt->fetch();
-			echo blade()->run("ViewParts.GameSettings", [
+				$playerList = $stmt->fetchAll();
+			}
+
+			return Response::view("ViewParts.GameSettings", [
 				"tournamentID" => $id,
 				"playerList" => $playerList,
 				"settings" => $settings
 			]);
-
-
 		} catch (Exception $exception) {
-			Redirect::internalServerError();
+			return Response::internalServerError($exception);
 		}
 	}
 
@@ -235,18 +271,16 @@ class TournamentController
 					array_push($filledTables, $stmt->fetchAll());
 				}
 
-				echo blade()->run("ViewParts.listTables", [
+				return Response::view("ViewParts.listTables", [
 					"tables" => $filledTables,
 				]);
-			}
-			else {
-				Redirect::locked();
+			} else {
+				return Response::locked();
 			}
 		}
-		catch (Exception $e) {
-			Redirect::internalServerError();
+		catch (Exception $exception) {
+			return Response::internalServerError($exception);
 		}
 	}
 }
-
 ?>

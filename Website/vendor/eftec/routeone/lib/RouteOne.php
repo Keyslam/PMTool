@@ -217,7 +217,7 @@ class RouteOne
         }
         if (method_exists($controller, $actionRequest)) {
             try {
-                $controller->{$actionRequest}(...$args);
+                return $controller->{$actionRequest}(...$args);
             } catch (Exception $ex) {
                 if ($throwOnError) {
                     throw $ex;

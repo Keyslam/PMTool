@@ -1,25 +1,28 @@
-<div class="col s6">
-    <input id="tournament-id" type="text" value="{{$tournamentID}}" hidden>
-
-    @if($isJoined == 0)
-        <button class="btn waves-effect waves-light" id="join-game">Inschrijven</button>
-    @else
-        <button class="btn waves-effect waves-light" id="leave-game" invisible>Uitschrijven</button>
-    @endif
+<div class="row">
+    <div class="col s12">
+        <label for="player-list">Spelers</label>
+        <ul id="player-list" class="collection">
+            @if(count($playerList) > 0)
+                @foreach($playerList as $player)
+                    <li class="collection-item">{{$player["UserName"]}}</li>
+                @endforeach
+            @else
+                <li class="collection-item">Er zijn nog geen spelers ingeschreven voor dit spel</li>
+            @endif
+        </ul>
+    </div>
 </div>
 
-<div class="col s3">
-    <label for="player-list">Spelers</label>
-    <ul id="player-list" class="collection">
-        @if(count($playerList) > 0)
-            @foreach($playerList as $player)
-                <li class="collection-item">{{$player["UserName"]}}</li>
-            @endforeach
-        @else
-            <li class="collection-item">Er zijn nog geen spelers</li>
-        @endif
-    </ul>
+<div class="row">
+    <div class="col s12">
+        <input id="tournament-id" type="text" value="{{$tournamentID}}" hidden>
 
+        @if($isJoined == 0)
+            <button class="btn waves-effect waves-light" style="width: 100%" id="join-game">Inschrijven</button>
+        @else
+            <button class="btn waves-effect waves-light" style="width: 100%" id="leave-game" invisible>Uitschrijven</button>
+        @endif
+    </div>
 </div>
 
 <script>
@@ -38,25 +41,25 @@
             data: {
                 "TournamentID": $("#tournament-id").val(),
             }
-        }).done(function (response) {
-            if (response.success) {
-                document.dispatchEvent(userSignupChangedEvent);
-            } else {
-                alert("Er is iets mis gegaan");
-            }
         })
+        .done(serverSuccess(function(response) {
+            document.dispatchEvent(userSignupChangedEvent);
+        }))
+        .fail(serverError);
     }
 
     function leaveGame(){
         $.ajax({
             method: "POST",
             url: "@asset('Tournament/LeaveGame')",
-            dataType: "html",
+            dataType: "json",
             data: {
                 "TournamentID": $("#tournament-id").val(),
             }
-        }).done(function (response) {
-            document.dispatchEvent(userSignupChangedEvent);
         })
+        .done(serverSuccess(function(response) {
+            document.dispatchEvent(userSignupChangedEvent);
+        }))
+        .fail(serverError);
     }
 </script>

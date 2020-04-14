@@ -1,5 +1,5 @@
-<input id="game-id" type="text" value="{{$tournamentID}}" readonly hidden>
-<div class="col s3">
+<input id="tournament-id" type="text" value="{{$tournamentID}}" readonly hidden>
+<div class="col s4">
     <div class="row">
         <label for="start-date">Toernooi datum</label>
         <input id="start-date" type="text" value="{{$settings["time_part"]}}" class="datepicker">
@@ -14,7 +14,7 @@
                 @foreach($playerList as $player)
                     <li class="collection-item">{{$player["UserName"]}}<input type="text" value="{{$player["ID"]}}"
                                                                               hidden>
-                        <button><i class="material-icons small">close</i></button>
+                        <i class="material-icons small remove-player right" data-id = {{$player["ID"]}} class="remove-player">close</i>
                     </li>
                 @endforeach
             @else()
@@ -26,7 +26,7 @@
 
 </div>
 
-<div class="col s6">
+<div class="col s8">
     <form>
         <div class="row">
             <div class="col s6">
@@ -111,8 +111,12 @@
 </div>
 
 <script>
+    var gameRemovedEvent = new Event("gameRemoved");
+    var userSignupChangedEvent = new Event("userSignupChanged");
+    
     $(document).ready(function () {
-        $("#remove-game").on("click", removeGame); // TODO: Add Tournament ID to button
+        $("#remove-game").on("click", removeGame);
+        $(".remove-player").on("click", removePlayer);
     })
 
     function removeGame(event) {
@@ -120,33 +124,35 @@
         $.ajax({
             method: "POST",
             url: "@asset('Tournament/RemoveGame')",
-            dataType: "html",
+            dataType: "json",
             data: {
-                "id":  $("#game-id").val()
+                "id": $("#tournament-id").val()
             }
-        }).done(function (response) {
-            if (response === "1") {
-                updateScheduledGames();
-            } else if (response > "1") {
-                alert('Error. Meerdere toernoeien verwijdert')
-            } else {
-                alert(response);
-            }
-        });
-
+        })
+        .done(serverSuccess(function(response) {
+            document.dispatchEvent(gameRemovedEvent);
+        }))
+        .fail(serverError);
     }
 
-    function updateScheduledGames() {
+    function removePlayer(event){
+        var id = $(event.target).closest("i").data("id");
         $.ajax({
             method: "POST",
-            url: "@asset('Tournament/ListScheduled')",
-            dataType: "html",
+            url: "@asset('Tournament/RemoveFromGame')",
+            dataType: "json",
+            data: {
+                "TournamentID": $("#tournament-id").val(),
+                "id" : $(event.target).closest("i").data("id")
+            }
         })
-            .done(function (data) {
-                $("#scheduled-games").html(data);
-            })
-            .fail(function () {
-                alert("Something went wrong ;-;");
-            });
+        .done(function(response) {
+            if (response.success) {
+                document.dispatchEvent(userSignupChangedEvent);
+            } else {
+                serverError(response);
+            }
+        })
+        .fail(serverError);
     }
 </script>

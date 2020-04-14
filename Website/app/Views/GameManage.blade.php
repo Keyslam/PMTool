@@ -54,7 +54,11 @@
 
 @section("scripts")
 	<script>
+	var id = null;
 		$(document).ready(function () {
+			document.addEventListener("gameRemoved", updateScheduledGames);
+			document.addEventListener("userSignupChanged", updateGamesettings);
+
 			socketCommands["newGameAdded"] = function() {
 				updateScheduledGames();
 			}
@@ -80,48 +84,47 @@
 					"time": $("#time").val(),
 					"date": $("#date").val()
 				}
-			}).done(function (response) {
-				if (response.success) 
-				{
-					$("#new-game-modal").modal("close");
-					clearNewGameModal();
-					wsc.send(JSON.stringify({
-						"command": "newGameAdded", 
-						"gameID": response,
-					}));
-				} else {
-					alert("Er is iets mis gegaan.");
-				}
-			});
+			}
+			).done(serverSuccess(function(response) {
+				$("#new-game-modal").modal("close");
+				clearNewGameModal();
+
+				wsc.send(JSON.stringify({
+					"command": "newGameAdded", 
+					"gameID": response,
+				}));
+			}))
+			.fail(serverError);
 		}
 
 		function updateScheduledGames() {
-			$.ajax({
-				method: "POST",
-				url: "@asset('Tournament/ListScheduled')",
-				dataType: "html",
-			})
-			.done(function (data) {
-				$("#scheduled-games").html(data);
-			})
-			.fail(function () {
-				alert("Something went wrong ;-;");
-			});
-		}
+            $.ajax({
+                method: "POST",
+                url: "@asset('Tournament/ListScheduled')",
+                dataType: "json",
+            })
+            .done(serverSuccess(function(response) {
+                $("#scheduled-games").html(response.html);
+            }))
+            .fail(serverError);
+        }
 
 		function selectGame(event) {
+			id =  $(event.target).closest("li").data("id");
+			updateGamesettings();
+		}
+
+		function updateGamesettings() {
 			$.ajax({
 				method: "POST",
 				url: "@asset('Tournament/SelectGameSettings')",
-				dataType: "html",
+				dataType: "json",
 				data: {
-					"id": $(event.target).closest("li").data("id")
+					"id": id
 				}
-			}).done(function (data) {
-				$("#game-settings").html(data);
-			}).fail(function () {
-				alert('De toernooi data kon niet worden opgehaald');
-			})
+			}).done(serverSuccess(function(response) {
+				$("#game-settings").html(response.html);
+			})).fail(serverError)
 		}
 	</script>
 @endsection()
