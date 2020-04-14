@@ -24,11 +24,11 @@ include "app/response.php";
 include "app/Objects/GameSettings.php";
 
 function path() {
-	return "http://".$_SERVER["SERVER_ADDR"]."/PMTool/Website/";
+	return "http://".getHostByName($_SERVER["HTTP_HOST"])."/PMTool/Website/";
 }
 
 function configPath() {
-    return "http://".$_SERVER["SERVER_ADDR"]."/PMTool/config.ini";
+    return "http://".getHostByName($_SERVER["HTTP_HOST"])."/PMTool/config.ini";
 }
 
 // Blade container
