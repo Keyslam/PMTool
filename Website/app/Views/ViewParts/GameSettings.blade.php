@@ -88,23 +88,17 @@
 
         <div class="row">
             <div class="col s6">
-                <button class="btn waves-effect waves-light" style="width: 100%">Pauze forceren</button>
-            </div>
-
-            <div class="col s6">
-                <input type="checkbox"><span>Pauzeren wanneer ronde eindigt</span>
+                <button class="btn waves-effect waves-light" style="width: 100%">Pauzeren</button>
             </div>
         </div>
 
         <div class="row">
             <div class="col s6">
-                <button class="btn waves-effect waves-light" style="width: 100%">Start forceren</button>
+                <button id="start-game" class="btn waves-effect waves-light" style="width: 100%">Spel starten</button>
             </div>
 
             <div class="col s6">
-                <button id="remove-game" class="btn waves-effect waves-light" style="width: 100%">Spel
-                    verwijderen
-                </button>
+                <button id="remove-game" class="btn waves-effect waves-light" style="width: 100%">Spel verwijderen</button>
             </div>
         </div>
     </form>
@@ -115,7 +109,31 @@
         $("#remove-game").on("click", removeGame);
         $(".remove-player").on("click", removePlayer);
         $("#save-settings").on("click", saveSettings)
+        $("#start-game").on("click", startGame);
     })
+
+    function startGame(event) {
+        event.preventDefault();
+
+        var tournamentID = $("#tournament-id").val();
+
+        $.ajax({
+            method: "POST",
+            url: "@asset('Tournament/StartGame')",
+            dataType: "json",
+            data: {
+                "tournamentID": $("#tournament-id").val()
+            }
+        })
+        .done(serverSuccess(function(response) {
+            alert(response);
+
+            wsc.send(JSON.stringify({
+				"command": "gameStarted", 
+			}));
+        }))
+        .fail(serverError);
+    }
 
     function removeGame(event) {
         event.preventDefault();

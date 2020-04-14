@@ -286,6 +286,9 @@ class TournamentController
 		}
 	}
 
+	public function ListTablesAction() {
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+
 	public function updateSettingsAction()
 	{
 		if (!Middleware::postMethod()) {
@@ -350,6 +353,43 @@ class TournamentController
 			} else {
 				return Response::locked();
 			}
+		} catch (Exception $exception) {
+			return Response::internalServerError($exception);
+		}
+	}
+
+	public function StartGameAction() {
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isAdmin()) { return Response::notAuthorized(); }
+
+		$tournamentID = isset($_POST["tournamentID"]) ? trim(filter_input(INPUT_POST, "tournamentID", FILTER_SANITIZE_STRING)) : "";
+		if ($tournamentID == "") {
+			return Response::badRequest();
+		}
+
+		try {
+			$stmt = DB::Connection()->prepare("SELECT UserID FROM GameStatistics WHERE TournamentID=:tournamentID");
+			$stmt->bindValue("tournamentID", $tournamentID);
+			$stmt->execute();
+			$results = $stmt->fetchAll();
+
+			$tableCount = ceil(count($results) / 4);
+
+			for ($i = 0; $i < count($results); $i++) 
+			{
+				$table = $i % $tableCount;
+
+				$stmt = DB::Connection()->prepare("UPDATE GameStatistics SET CurrentTable=:currentTable WHERE UserID=:id");
+				$stmt->bindValue("currentTable", $table);
+				$stmt->bindValue("id", $results[$i]["UserID"]);
+				$stmt->execute();
+			}
+		
+			$stmt = DB::Connection()->prepare("UPDATE Tournament SET HasStarted=true WHERE ID=:tournamentID");
+			$stmt->bindValue("tournamentID", $tournamentID);
+			$stmt->execute();
+
+			return Response::success();
 		} catch (Exception $exception) {
 			return Response::internalServerError($exception);
 		}
