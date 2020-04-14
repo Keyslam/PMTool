@@ -4,6 +4,10 @@ class Auth {
         return (isset($_SESSION["user_id"]) && $_SESSION["user_id"]) ? true : false;
     }
 
+    public function isUser() {
+        return (isset($_SESSION["user_is_admin"]) && !$_SESSION["user_is_admin"]);
+    }
+
     public function isAdmin() {
         return (isset($_SESSION["user_is_admin"]) && $_SESSION["user_is_admin"]);
     }

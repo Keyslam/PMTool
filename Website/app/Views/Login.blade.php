@@ -4,7 +4,7 @@
 
 @section("constrained-content")
 	<div class="row">
-		<div class="col s10 offset-s1">
+		<div class="col l10 offset-l1">
 			<div class="card">
                 <div class="card-content">
                     <form action="{{ router()->getCurrentUrl() }}/Home/LoginPOST" method="POST">
@@ -25,7 +25,6 @@
                         @endif
                         <a href="{{ router()->getCurrentUrl() }}/Home/Register">Nog geen account? Klik hier!</a><br>
                         <button class="btn waves-effect waves-light" type="submit">Inloggen<i class="material-icons right">send</i></button>
-
                     </form>
                 </div>
             </div>

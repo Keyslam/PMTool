@@ -9,23 +9,23 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" >
-		<link rel="stylesheet" href="@asset('css/materialize.css')" media="screen, projection">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 	</head>
-	
+
 	<body>
-		@include("Navbar")
-		
+		@include("ViewParts.Navbar")
+
 
 		@yield('content')
 
 		<div class="container">
-			@include("Header")
+			@include("viewParts.Header")
 
    			@yield('constrained-content')
 		</div>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-		
+
 		<script>
 			$(document).ready(function() {
 				M.AutoInit();
@@ -35,8 +35,9 @@
 						"cancel": "Annuleren",
 						"done": "Oke",
 						"clear": "Reset"
-					}
+					},
 				});
+
 				$(".datepicker").datepicker({
 					"minDate": new Date(),
 					"format": "yyyy-mm-dd",
@@ -52,7 +53,24 @@
 					}
 				});
 			});
-		</script>	
+
+			function serverSuccess(callback) {
+				return function(response) {
+					if (response.success) {
+						callback(response);
+					} else {
+						serverError(response);
+					}
+				}
+			}
+
+			function serverError(response) {
+				if (response.notify) {
+					alert("Er is iets mis gegaan.");
+					console.log(response);
+				}
+			}
+		</script>
 
 		@yield('scripts')
 	</body>
