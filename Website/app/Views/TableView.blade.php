@@ -5,6 +5,13 @@
 @section("constrained-content")
 
 <div class="row">
+	<h3 class="col m12 s12 l12 center" id="status">Wacht tot de ronde begint...</h3>
+	<h4 class="col m12 s12 l12 center" id="time"></h4>
+
+
+	<br>
+	<br>
+
 	<div class="col s12 l3" id="fiches">
 	</div>
 
@@ -25,6 +32,19 @@ $(document).ready(function() {
 		refreshFiches();
 		refreshBlinds();
 	}
+	socketCommands["roundStart"] = function(data) {
+		$("#status").html("Ronde is begonnen!");
+	}
+	socketCommands["gameEnd"] = function() {
+		$("#status").html("Spel is beëindigd!");
+	}
+	socketCommands["roundPause"] = function() {
+		$("#status").html("Ronde is gepauzeerd...");
+	}
+	socketCommands["roundEnd"] = function() {
+		$("#status").html("Ronde is beëindigd. Wacht tot de volgende ronde...");
+	}
+
 	socketCommands["userChanged"] = refreshPlayers;
 
 	socketCommands["userSignup"]  = refreshPlayers;

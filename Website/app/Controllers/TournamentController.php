@@ -132,6 +132,8 @@ class TournamentController
 				"isJoined" => $isJoined,
 				"tournamentID" => $TournamentID,
 				"playerList" => $playerList
+
+				
 			]);
 
 			return Response::success([
@@ -255,8 +257,13 @@ class TournamentController
 
 		try {
 			$settings = null;
-			$playerList = null; {
-				$stmt = DB::Connection()->prepare("SELECT DATE( StartTime ) AS date_part, TIME( StartTime ) AS time_part, Settings FROM Tournament WHERE ID = :id");
+			$playerList = null; 
+			$hasStarted = null;
+			$hasEnded = null;
+			$isPaused = null;
+			
+			{
+				$stmt = DB::Connection()->prepare("SELECT DATE( StartTime ) AS date_part, TIME( StartTime ) AS time_part, Settings, HasStarted, HasEnded, IsPaused FROM Tournament WHERE ID = :id");
 				$stmt->bindValue(":id", $id);
 				$stmt->execute();
 
@@ -265,11 +272,17 @@ class TournamentController
 				$dateTime = ["StartDate" => $data["date_part"], "StartTime" => $data["time_part"]];
 				$settings = json_decode($data["Settings"], true);
 
+				$hasStarted = $data["HasStarted"];
+				$hasEnded = $data["HasEnded"];
+				$isPaused = $data["IsPaused"];
+
 				asort($settings["chipsList"]);
 				ksort($settings["potDivision"]);
-			} {
-				$stmt = DB::Connection()->prepare("SELECT ID, UserName, HasRebought FROM User INNER JOIN GameStatistics ON UserID=ID WHERE TournamentID=tournamentID");
-				$stmt->bindValue(":id", $id);
+			} 
+			
+			{
+				$stmt = DB::Connection()->prepare("SELECT ID, UserName, HasRebought FROM User INNER JOIN GameStatistics ON UserID=ID WHERE TournamentID=:tournamentID");
+				$stmt->bindValue(":tournamentID", $id);
 				$stmt->execute();
 
 				$playerList = $stmt->fetchAll();
@@ -279,7 +292,11 @@ class TournamentController
 				"tournamentID" => $id,
 				"playerList" => $playerList,
 				"settings" => $settings,
-				"dateTime" => $dateTime
+				"dateTime" => $dateTime,
+
+				"roundGoing" => !$isPaused,
+				"gameIdle" => $isPaused,
+				"gameStarted" => $hasStarted,
 			]);
 		} catch (Exception $exception) {
 			return Response::internalServerError($exception);
@@ -372,7 +389,7 @@ class TournamentController
 			$stmt->execute();
 			$results = $stmt->fetchAll();
 
-			$tableCount = ceil(count($results) / 4);
+			$tableCount = ceil(count($results) / 5);
 
 			for ($i = 0; $i < count($results); $i++) 
 			{
@@ -385,6 +402,75 @@ class TournamentController
 			}
 		
 			$stmt = DB::Connection()->prepare("UPDATE Tournament SET HasStarted=true WHERE ID=:tournamentID");
+			$stmt->bindValue("tournamentID", $tournamentID);
+			$stmt->execute();
+
+			
+
+			return Response::success();
+		} catch (Exception $exception) {
+			return Response::internalServerError($exception);
+		}
+	}
+
+	public function StopGameAction() {
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isAdmin()) { return Response::notAuthorized(); }
+
+		$tournamentID = isset($_POST["tournamentID"]) ? trim(filter_input(INPUT_POST, "tournamentID", FILTER_SANITIZE_STRING)) : "";
+		if ($tournamentID == "") {
+			return Response::badRequest();
+		}
+
+		try {		
+			$stmt = DB::Connection()->prepare("UPDATE Tournament SET HasStarted=false, HasEnded=true WHERE ID=:tournamentID");
+			$stmt->bindValue("tournamentID", $tournamentID);
+			$stmt->execute();
+
+			return Response::success();
+		} catch (Exception $exception) {
+			return Response::internalServerError($exception);
+		}
+	}
+
+	public function StartRoundAction() {
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isAdmin()) { return Response::notAuthorized(); }
+
+		$tournamentID = isset($_POST["tournamentID"]) ? trim(filter_input(INPUT_POST, "tournamentID", FILTER_SANITIZE_STRING)) : "";
+		if ($tournamentID == "") {
+			return Response::badRequest();
+		}
+
+		try {		
+			$stmt = DB::Connection()->prepare("UPDATE Tournament SET IsPaused=false WHERE ID=:tournamentID");
+			$stmt->bindValue("tournamentID", $tournamentID);
+			$stmt->execute();
+
+			$stmt = DB::Connection()->prepare("SELECT Settings From Tournament WHERE ID=:tournamentID");
+			$stmt->bindValue("tournamentID", $tournamentID);
+			$stmt->execute();
+			$roundTime = json_decode($stmt->fetchColumn(), true)["roundTime"];
+
+			return Response::success([
+				"time" => $roundTime,
+			]);
+		} catch (Exception $exception) {
+			return Response::internalServerError($exception);
+		}
+	}
+
+	public function PauseRoundAction() {
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isAdmin()) { return Response::notAuthorized(); }
+
+		$tournamentID = isset($_POST["tournamentID"]) ? trim(filter_input(INPUT_POST, "tournamentID", FILTER_SANITIZE_STRING)) : "";
+		if ($tournamentID == "") {
+			return Response::badRequest();
+		}
+
+		try {		
+			$stmt = DB::Connection()->prepare("UPDATE Tournament SET IsPaused=true WHERE ID=:tournamentID");
 			$stmt->bindValue("tournamentID", $tournamentID);
 			$stmt->execute();
 
