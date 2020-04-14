@@ -65,8 +65,10 @@
 			}
 
 			function serverError(response) {
-				alert("Something went wrong. Check the console for details");
-				console.log(response);
+				if (response.notify) {
+					alert("Er is iets mis gegaan.");
+					console.log(response);
+				}
 			}
 		</script>
 
