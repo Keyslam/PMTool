@@ -208,7 +208,7 @@ class TournamentController
 				return Response::fail();
 			}
 		} catch (Exception $exception){
-			return Response::internalServerError();
+			return Response::internalServerError($exception);
 		}
 	}
 
