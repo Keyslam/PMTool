@@ -2,15 +2,11 @@ const WebSocket = require("ws");
 
 const wss = new WebSocket.Server({ port: 1500 });
 
-let activeGame = null;
-
 let commands = {
-  "isGameActive": isGameActive,
-  "newGameAdded": newGameAdded,
-
-  "ping": ping,
-  "repeat": repeat,
-  "newUserJoins": newUserJoins,
+  "gameAdded": gameAdded,
+  "gameRemoved": gameRemoved,
+  "userSignup": userSignup, 
+  "userSignout": userSignout,
 }
 
 function heartbeat() {
@@ -64,41 +60,26 @@ function broadcast(data) {
   });
 }
 
-function isGameActive(ws, data) {
-  let response = {
-    "value": activeGame ? true : false,
-  };
-  
-  ws.send(JSON.stringify(response));
-}
-
-function newGameAdded(ws, data) {
+function gameAdded(ws, data) {
   broadcast(JSON.stringify({
-    "command": "newGameAdded",
+    "command": "gameAdded",
   }));
 }
 
-function ping(ws, data) {
-  ws.send(JSON.stringify({
-    "value": "pong",
+function gameRemoved(ws, data) {
+  broadcast(JSON.stringify({
+    "command": "gameRemoved",
   }));
 }
 
-function newUserJoins(ws, data) {
+function userSignup(ws, data) {
   broadcast(JSON.stringify({
-    "command": "newUserJoins",
+    "command": "userSignup",
   }))
 }
 
-function repeat(ws, data) {
-  let toRepeat = data.toRepeat;
-  
-  if (toRepeat === null) {
-    return;
-  }
-
-  ws.send(JSON.stringify({
-    "value": toRepeat,
-  }));
+function userSignout(ws, data) {
+  broadcast(JSON.stringify({
+    "command": "userSignout",
+  }))
 }
-

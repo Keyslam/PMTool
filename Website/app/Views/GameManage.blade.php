@@ -54,14 +54,18 @@
 
 @section("scripts")
 	<script>
-	var id = null;
+		var id = null;
+		
 		$(document).ready(function () {
-			document.addEventListener("gameRemoved", updateScheduledGames);
-			document.addEventListener("userSignupChanged", updateGamesettings);
-
-			socketCommands["newGameAdded"] = function() {
+			socketCommands["gameAdded"]   = updateScheduledGames;
+			socketCommands["gameRemoved"] = function() {
+				id = null;
 				updateScheduledGames();
+				updateGamesettings();
 			}
+
+			socketCommands["userSignup"] = updateGamesettings;
+			socketCommands["userSignout"] = updateGamesettings;
 
 			updateScheduledGames();
 			$("#new-game-form").on("submit", newGame);
@@ -90,8 +94,7 @@
 				clearNewGameModal();
 
 				wsc.send(JSON.stringify({
-					"command": "newGameAdded", 
-					"gameID": response,
+					"command": "gameAdded", 
 				}));
 			}))
 			.fail(serverError);
@@ -115,6 +118,11 @@
 		}
 
 		function updateGamesettings() {
+			if (id === null) {
+				$("#game-settings").html("");
+				return;
+			}
+
 			$.ajax({
 				method: "POST",
 				url: "@asset('Tournament/SelectGameSettings')",

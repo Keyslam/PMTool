@@ -183,32 +183,32 @@ class TournamentController
 	}
 
 	public function removeFromGameAction(){
-		Middleware::postMethod();
-		Middleware::isAdmin();
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+		if (!Middleware::isAdmin()) { return Response::notAuthorized(); }
 
 		$TournamentID = isset($_POST["TournamentID"]) ? trim(filter_input(INPUT_POST, "TournamentID", FILTER_SANITIZE_STRING)) : "";
 		if ($TournamentID == "") {
-			Response::badRequest();
+			return Response::badRequest();
 		}
 
 		$playerID = isset($_POST["id"]) ? trim(filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING)) : "";
 		if ($playerID == "") {
-			Response::badRequest();
+			return Response::badRequest();
 		}
 
-		try{
+		try {
 			$stmt = DB::Connection()->prepare("DELETE FROM GameStatistics WHERE TournamentID = :TournamentID AND UserID = :UserID");
 			$stmt->bindValue("TournamentID", $TournamentID);
 			$stmt->bindValue("UserID", $playerID);
 			$stmt->execute();
 
 			if ($stmt->rowCount() == 1){
-				Response::success();
+				return Response::success();
 			} else {
-				Response::fail();
+				return Response::fail();
 			}
 		} catch (Exception $exception){
-			Response::internalServerError();
+			return Response::internalServerError();
 		}
 	}
 

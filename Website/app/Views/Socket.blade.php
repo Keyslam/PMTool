@@ -11,7 +11,7 @@
 		let data = JSON.parse(event.data);
 
 		if (socketCommands[data.command]) {
-			//console.log(data.command " : " + data);
+			console.log(data.command + " : " + data);
 			socketCommands[data.command](data);
 		}
 	});

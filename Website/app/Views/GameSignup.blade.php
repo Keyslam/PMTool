@@ -18,14 +18,20 @@
 	</div>
 @endsection
 
+@include("socket")
 @section("scripts")
 	<script>
 		let selectedTournamentID = null;
 
 		$(document).ready(function () {
-			document.addEventListener("userSignupChanged", selectGame)
+			socketCommands["gameAdded"] = updateScheduledGames;
+			socketCommands["gameRemoved"] = updateScheduledGames;
+
+			socketCommands["userSignup"] = selectGame;
+			socketCommands["userSignout"] = selectGame;
 			
 			updateScheduledGames();
+
 			$("#scheduled-games").on("click", "li", function(event) {
 				selectedTournamentID = $(event.target).closest("li").data("id");
 				selectGameView($(event.target).closest("li"));
@@ -48,6 +54,7 @@
 		function selectGame(event) {
 			if (selectedTournamentID === null) {
 				$("#game-info").html("");
+				return;
 			};
 
 			$.ajax({

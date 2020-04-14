@@ -26,8 +26,6 @@
 </div>
 
 <script>
-    var userSignupChangedEvent = new Event("userSignupChanged");
-
     $(document).ready(function () {
         $("#join-game").on("click", joinGame);
         $("#leave-game").on("click", leaveGame)
@@ -43,7 +41,9 @@
             }
         })
         .done(serverSuccess(function(response) {
-            document.dispatchEvent(userSignupChangedEvent);
+            wsc.send(JSON.stringify({
+                "command": "userSignup",
+            }));
         }))
         .fail(serverError);
     }
@@ -58,7 +58,9 @@
             }
         })
         .done(serverSuccess(function(response) {
-            document.dispatchEvent(userSignupChangedEvent);
+            wsc.send(JSON.stringify({
+                "command": "userSignout",
+            }));
         }))
         .fail(serverError);
     }
