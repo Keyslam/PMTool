@@ -6,7 +6,7 @@
 
 @section("constrained-content")
 	<div class="row">
-		<div class="col s3">
+		<div class="col l3">
 			<label for="scheduled-games">Ingeplande spellen</label>
 			<div id="scheduled-games">
 
