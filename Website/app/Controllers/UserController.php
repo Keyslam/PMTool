@@ -19,11 +19,6 @@ class UserController {
 		if (!Auth::isUser()) { return Redirect::home(); }
 
 		try {
-			$stmt = DB::Connection()->prepare("SELECT AmountWon, HandsWon, HandsPlayed FROM GameStatistics WHERE UserID = :userID");
-			$stmt->bindValue("userID", $_SESSION["user_id"]);
-			$stmt->execute();
-			$results = $stmt->fetchAll();
-				
 			$amountWon    = 0;
 			$handsWon     = 0;
 			$handsPlayed  = 0;
@@ -31,6 +26,18 @@ class UserController {
 			$gamesPlayed  = 0;
 			$gameWinrate  = 0;
 			$handsWinrate = 0;
+			
+			{
+				$stmt = DB::Connection()->prepare("SELECT AmountWon, HandsWon, HandsPlayed FROM GameStatistics WHERE UserID = :userID");
+				$stmt->bindValue("userID", $_SESSION["user_id"]);
+				$stmt->execute();
+				$results = $stmt->fetchAll();		
+			}	
+
+			$stmt = DB::Connection()->prepare("SELECT COUNT('*') FROM GameStatistics INNER JOIN Tournament ON Tournament.ID=GameStatistics.TournamentID WHERE UserID = :userID AND Tournament.HasStarted");
+			$stmt->bindValue("userID", $_SESSION["user_id"]);
+			$stmt->execute();
+			$gamesPlayed = $stmt->fetchColumn();
 
 			foreach ($results as $result) {
 				$amountWon += $result["AmountWon"];
@@ -38,8 +45,6 @@ class UserController {
 				$handsPlayed += $result["HandsPlayed"];
 			}
 
-			$gamesPlayed = count($results);
-			
 			if ($gamesPlayed != 0) {
 				$gameWinrate = round($amountWon / $gamesPlayed * 100);
 			}
