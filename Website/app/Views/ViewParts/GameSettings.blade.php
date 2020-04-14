@@ -162,6 +162,7 @@
             url: "@asset('Tournament/UpdateSettings')",
             dataType: "json",
             data: {
+                "ID": $("#tournament-id").val(),
                 "startTime": $("#start-time").val(),
                 "startDate": $("#startDate").val(),
                 "settings": {

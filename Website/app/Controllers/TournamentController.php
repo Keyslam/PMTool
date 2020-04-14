@@ -221,6 +221,7 @@ class TournamentController
 		if (!Middleware::isAdmin()) { return Response::notAuthorized(); }
 
 		$id = isset($_POST["id"]) ? trim(filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING)) : "";
+		if ($id == "") {return Response::badRequest()}
 
 		try {
 			$settings = null;
@@ -256,6 +257,36 @@ class TournamentController
 			return Response::internalServerError($exception);
 		}
 	}
+
+	public function updateSettingsAction(){
+        if(!Middleware::postMethod()) {return Response::badRequest();}
+        if(!Middleware::isAdmin()) {return Response::notAuthorized();}
+
+        $tournamentID = isset($_POST["id"]) ? trim(filter_input(INPUT_POST, "id", FILTER_SANITIZE_STRING)) : "";
+        $settings = isset($_POST["settings"]) ? trim(filter_input(INPUT_POST, "settings", FILTER_SANITIZE_STRING)) : "";
+        $time = isset($_POST["startTime"]) ? trim(filter_input(INPUT_POST, "startTime", FILTER_SANITIZE_STRING)) : "";
+        $date = isset($_POST["startDate"]) ? trim(filter_input(INPUT_POST, "startDate", FILTER_SANITIZE_STRING)) : "";
+
+        if($tournamentID == "" || $settings == "" || $time == "" || $date == ""){return Response::badRequest();}
+
+        try {
+            $stmt = DB::Connection()->prepare("UPDATE Tournament SET Settings = :settings, StartTime = :startTime WHERE ID = :id");
+            $stmt->bindValue("id", $tournamentID);
+            $stmt->bindValue("startTime", $date . " " . $time . ":00");
+            $stmt->bindValue("settings", json_encode($settings, true));
+            $stmt->execute();
+
+            if($stmt->rowCount() == 1){
+                return Response::success();
+            }else{
+                return Response::fail();
+            }
+        }
+        catch (Exception $exception) {
+            return Response::internalServerError($exception);
+        }
+
+    }
 
 	public function ListTablesAction() {
 		try {
