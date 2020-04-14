@@ -66,6 +66,7 @@
 
 			socketCommands["userSignup"] = updateGamesettings;
 			socketCommands["userSignout"] = updateGamesettings;
+			socketCommands["settingsChanged"] = updateGamesettings;
 
 			updateScheduledGames();
 			$("#new-game-form").on("submit", newGame);

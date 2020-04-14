@@ -233,7 +233,9 @@ class TournamentController
 
 				$data = $stmt->fetch();
 				$dateTime = ["StartDate" => $data["date_part"], "StartTime" => $data["time_part"]];
-				$settings = json_decode($data["Settings"]);
+				$settings = json_decode($data["Settings"], true);
+                asort($settings["chipsList"]);
+				ksort($settings["potDivision"]);
 			}
 			
 			{
