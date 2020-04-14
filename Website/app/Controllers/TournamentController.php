@@ -286,9 +286,6 @@ class TournamentController
 		}
 	}
 
-	public function ListTablesAction() {
-		if (!Middleware::postMethod()) { return Response::badRequest(); }
-
 	public function updateSettingsAction()
 	{
 		if (!Middleware::postMethod()) {
@@ -326,6 +323,8 @@ class TournamentController
 
 	public function ListTablesAction()
 	{
+		if (!Middleware::postMethod()) { return Response::badRequest(); }
+
 		try {
 			$stmt = DB::Connection()->prepare("SELECT ID FROM Tournament WHERE HasStarted=true");
 			$stmt->execute();
