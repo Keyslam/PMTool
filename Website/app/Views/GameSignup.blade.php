@@ -7,33 +7,36 @@
 		<div class="col s3">
 			<label for="scheduled-games">Ingeplande spellen</label>
 			<div id="scheduled-games">
+			</div>
+		</div>
+
+		<div class="col s9">
+			<div id="game-info">
 
 			</div>
-			<button id="game-list-refresh" class="btn  modal-trigger waves-effect waves-light"
-				style="width: 100%">Refresh
-			</button>
-		</div>
-
-		<div id="game-info">
-
-		</div>
+		</div> 
 	</div>
 @endsection
 
+@include("socket")
 @section("scripts")
 	<script>
 		let selectedTournamentID = null;
 
 		$(document).ready(function () {
-			document.addEventListener("userSignupChanged", selectGame)
+			socketCommands["gameAdded"] = updateScheduledGames;
+			socketCommands["gameRemoved"] = updateScheduledGames;
+
+			socketCommands["userSignup"] = selectGame;
+			socketCommands["userSignout"] = selectGame;
 			
 			updateScheduledGames();
-			$("#game-list-refresh").on("click", updateScheduledGames);
+
 			$("#scheduled-games").on("click", "li", function(event) {
 				selectedTournamentID = $(event.target).closest("li").data("id");
+				selectGameView($(event.target).closest("li"));
 				selectGame();
 			});
-
 		});
 
 		function updateScheduledGames() {
@@ -51,6 +54,7 @@
 		function selectGame(event) {
 			if (selectedTournamentID === null) {
 				$("#game-info").html("");
+				return;
 			};
 
 			$.ajax({

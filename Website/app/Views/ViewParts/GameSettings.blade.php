@@ -14,7 +14,7 @@
                 @foreach($playerList as $player)
                     <li class="collection-item">{{$player["UserName"]}}<input type="text" value="{{$player["ID"]}}"
                                                                               hidden>
-                        <i class="material-icons small remove-player right" data-id = {{$player["ID"]}} class="remove-player">close</i>
+                        <i class="material-icons small remove-player right" data-id = {{$player["ID"]}} style="cursor: pointer;">close</i>
                     </li>
                 @endforeach
             @else()
@@ -111,9 +111,6 @@
 </div>
 
 <script>
-    var gameRemovedEvent = new Event("gameRemoved");
-    var userSignupChangedEvent = new Event("userSignupChanged");
-    
     $(document).ready(function () {
         $("#remove-game").on("click", removeGame);
         $(".remove-player").on("click", removePlayer);
@@ -130,29 +127,31 @@
             }
         })
         .done(serverSuccess(function(response) {
-            document.dispatchEvent(gameRemovedEvent);
+            wsc.send(JSON.stringify({
+				"command": "gameRemoved", 
+			}));
         }))
         .fail(serverError);
     }
 
     function removePlayer(event){
-        var id = $(event.target).closest("i").data("id");
+        var tournamentID = $("#tournament-id").val();
+        var userID = $(event.target).closest("i").data("id")
+
         $.ajax({
             method: "POST",
             url: "@asset('Tournament/RemoveFromGame')",
             dataType: "json",
             data: {
-                "TournamentID": $("#tournament-id").val(),
-                "id" : $(event.target).closest("i").data("id")
+                "TournamentID": tournamentID,
+                "id": userID,
             }
         })
-        .done(function(response) {
-            if (response.success) {
-                document.dispatchEvent(userSignupChangedEvent);
-            } else {
-                serverError(response);
-            }
-        })
+        .done(serverSuccess(function(response) {
+            wsc.send(JSON.stringify({
+                "command": "userSignout",
+            }));
+        }))
         .fail(serverError);
     }
 </script>

@@ -3,8 +3,17 @@
 @section("title", "UserStatistics")
 
 @section("constrained-content")
-	<h1>Gewonnen games: {{ $amountWon}}</h1>
-	<h1>Handen gewonnen: {{ $handsWon}}<h1>
-	<h1>Handen gespeeld: {{ $handsPlayed}}</h1>
-	<h1>Gemiddelde gewonnen handen: {{$averageHandsWon}}%</h1>
+	<label for="games-statistics">Spellen</label>
+	<ul id="games-statistics" class="collection">
+		<li class="collection-item">Gespeeld: {{ $gamesPlayed}}</li>
+		<li class="collection-item">Gewonnen: {{ $amountWon}}</li>
+		<li class="collection-item">Winratio: {{ $gamesWinrate }}</li>
+	</ul>
+
+	<label for="hands-statistics">Handen</label>
+	<ul id="hands-statistics" class="collection">
+		<li class="collection-item">Gewonnen: {{ $handsWon}}<li>
+		<li class="collection-item">Gespeeld: {{ $handsPlayed}}</li>
+		<li class="collection-item">Winratio: {{$handsWinrate}}%</li>
+	</ul>
 @endsection
