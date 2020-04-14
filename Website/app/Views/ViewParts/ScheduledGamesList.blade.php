@@ -1,4 +1,4 @@
-<ul class="collection">
+<ul class="collection" style="cursor: pointer;">
     @if(count($scheduledGames) > 0)
         @foreach ($scheduledGames as $scheduledGame)
             <li class="collection-item games" data-id="{{$scheduledGame["ID"]}}">

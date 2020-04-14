@@ -114,6 +114,7 @@
 
 		function selectGame(event) {
 			id =  $(event.target).closest("li").data("id");
+			selectGameView($(event.target).closest("li"));
 			updateGamesettings();
 		}
 
