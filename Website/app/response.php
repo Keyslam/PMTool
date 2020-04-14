@@ -21,9 +21,11 @@ class Response
 		return Response::create(true, 200, $fields);
 	}
 
-	public static function fail($fields = [])
+	public static function fail($notify = true, $fields = [])
 	{
-		return Response::create(false, 200, $fields);
+		return Response::create(false, 200, array_merge([
+			"notify" => $notify,
+		], $fields));
 	}
 
 	public static function badRequest()

@@ -9,12 +9,12 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
       <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" >
-		<link rel="stylesheet" href="@asset('css/materialize.css')" media="screen, projection">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 	</head>
-	
+
 	<body>
 		@include("ViewParts.Navbar")
-		
+
 
 		@yield('content')
 
@@ -25,7 +25,7 @@
 		</div>
 
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-		
+
 		<script>
 			$(document).ready(function() {
 				M.AutoInit();
@@ -62,14 +62,16 @@
 					} else {
 						serverError(response);
 					}
-				} 
+				}
 			}
 
 			function serverError(response) {
-				alert("Something went wrong. Check the console for details");
-				console.log(response);
+				if (response.notify) {
+					alert("Er is iets mis gegaan.");
+					console.log(response);
+				}
 			}
-		</script>	
+		</script>
 
 		@yield('scripts')
 	</body>

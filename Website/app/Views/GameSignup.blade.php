@@ -4,13 +4,13 @@
 
 @section("constrained-content")
 	<div class="row">
-		<div class="col s3">
+		<div class="col l3">
 			<label for="scheduled-games">Ingeplande spellen</label>
 			<div id="scheduled-games">
 			</div>
 		</div>
 
-		<div class="col s9">
+		<div class="col l">
 			<div id="game-info">
 
 			</div>

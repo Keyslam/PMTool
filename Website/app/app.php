@@ -20,12 +20,15 @@ include "app/redirect.php";
 include "app/auth.php";
 include "app/response.php";
 
+// Load Objects
+include "app/Objects/GameSettings.php";
+
 function path() {
-	return "http://localhost/PMTool/Website/";
+	return "http://".getHostByName($_SERVER["HTTP_HOST"])."/PMTool/Website/";
 }
 
 function configPath() {
-    return "http://localhost/PMTool/config.ini";
+    return "http://".getHostByName($_SERVER["HTTP_HOST"])."/PMTool/config.ini";
 }
 
 // Blade container

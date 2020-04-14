@@ -6,7 +6,7 @@
 
 @section("constrained-content")
 	<div class="row">
-		<div class="col s3">
+		<div class="col l3">
 			<label for="scheduled-games">Ingeplande spellen</label>
 			<div id="scheduled-games">
 
@@ -17,7 +17,7 @@
 			</button>
 		</div>
 
-		<div id="game-settings" class="col s9">
+		<div id="game-settings" class="col l9">
 
 		</div>
 	</div>
@@ -30,17 +30,17 @@
 				<br>
 
 				<div class="row">
-					<div class="col s10 offset-s1">
+					<div class="col l10 offset-l1">
 						<label for="date">Kies een datum:</label>
 						<input id="date" type="text" class="datepicker" required>
 					</div>
 
-					<div class="col s10 offset-s1">
+					<div class="col l10 offset-l1">
 						<label for="time">Kies een tijd:</label>
 						<input id="time" type="time" class="timepicker" required>
 					</div>
 
-					<div class="col s4 offset-s4" style="bottom: 30px; position: absolute;">
+					<div class="col l4 offset-s4" style="bottom: 30px; position: absolute;">
 						<button style="width: 40%; float: left;" type="submit" id="new-game" class="btn waves-effect waves-light">Opslaan</button>
 						<button style="width: 40%; float: right;" id="cancel-game" class="btn waves-effect waves-light modal-close">Annuleren</button>
 					</div>
@@ -66,6 +66,7 @@
 
 			socketCommands["userSignup"] = updateGamesettings;
 			socketCommands["userSignout"] = updateGamesettings;
+			socketCommands["settingsChanged"] = updateGamesettings;
 
 			updateScheduledGames();
 			$("#new-game-form").on("submit", newGame);
