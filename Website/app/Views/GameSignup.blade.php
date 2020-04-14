@@ -7,16 +7,14 @@
 		<div class="col s3">
 			<label for="scheduled-games">Ingeplande spellen</label>
 			<div id="scheduled-games">
+			</div>
+		</div>
+
+		<div class="col s9">
+			<div id="game-info">
 
 			</div>
-			<button id="game-list-refresh" class="btn  modal-trigger waves-effect waves-light"
-				style="width: 100%">Refresh
-			</button>
-		</div>
-
-		<div id="game-info">
-
-		</div>
+		</div> 
 	</div>
 @endsection
 
@@ -28,12 +26,11 @@
 			document.addEventListener("userSignupChanged", selectGame)
 			
 			updateScheduledGames();
-			$("#game-list-refresh").on("click", updateScheduledGames);
 			$("#scheduled-games").on("click", "li", function(event) {
 				selectedTournamentID = $(event.target).closest("li").data("id");
+				selectGameView($(event.target).closest("li"));
 				selectGame();
 			});
-
 		});
 
 		function updateScheduledGames() {

@@ -9,3 +9,11 @@
         <li class="collection-item"><b>Er zijn geen geplande games</b></li>
     @endif
 </ul>
+
+<script>
+function selectGameView(view) {
+    $(".games").removeClass("active");
+
+    view.addClass("active");
+}
+</script>

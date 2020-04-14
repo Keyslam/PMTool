@@ -19,21 +19,42 @@ class UserController {
 		if (!Auth::isUser()) { return Redirect::home(); }
 
 		try {
-			$stmt = DB::Connection()->prepare("SELECT AmountWon, HandsWon, HandsPlayed FROM GameStatistics WHERE UserID = :UserID");
-			$stmt->bindValue("UserID", $_SESSION["user_id"]);
+			$stmt = DB::Connection()->prepare("SELECT AmountWon, HandsWon, HandsPlayed FROM GameStatistics WHERE UserID = :userID");
+			$stmt->bindValue("userID", $_SESSION["user_id"]);
 			$stmt->execute();
-			$results = $stmt->fetch();
+			$results = $stmt->fetchAll();
 				
-			$averageHandsWon = 0;
-			if ($results["HandsPlayed"] > 0) {
-				$averageHandsWon = round($results["HandsWon"]/$results["HandsPlayed"] * 100);
+			$amountWon    = 0;
+			$handsWon     = 0;
+			$handsPlayed  = 0;
+			
+			$gamesPlayed  = 0;
+			$gameWinrate  = 0;
+			$handsWinrate = 0;
+
+			foreach ($results as $result) {
+				$amountWon += $result["AmountWon"];
+				$handsWon += $result["HandsWon"];
+				$handsPlayed += $result["HandsPlayed"];
+			}
+
+			$gamesPlayed = count($results);
+			
+			if ($gamesPlayed != 0) {
+				$gameWinrate = round($amountWon / $gamesPlayed * 100);
+			}
+			
+			if ($handsPlayed != 0) {
+				$handsWinrate = round($handsWon / $handsPlayed * 100);
 			}
 
 			return Response::view("UserStatistics", [
-				"amountWon" => $results["AmountWon"],
-				"handsWon" => $results["HandsWon"],
-				"handsPlayed" => $results["HandsPlayed"],
-				"averageHandsWon" => $averageHandsWon,
+				"amountWon" => $amountWon,
+				"gamesPlayed" => $gamesPlayed,
+				"gamesWinrate" => $gameWinrate,
+				"handsWon" => $handsWon,
+				"handsPlayed" => $handsPlayed,
+				"handsWinrate" => $handsWinrate,
 			]);
 		} catch (Exception $exception) {
 			return Response::internalServerError($exception);

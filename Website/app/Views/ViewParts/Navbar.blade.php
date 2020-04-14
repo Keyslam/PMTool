@@ -1,25 +1,33 @@
 <nav>
 	<div class="nav-wrapper">
-	    <a href="#" class="brand-logo">Logo</a>
-        
-        <ul id="nav-mobile" class="right hide-on-med-and-down">
-            <li><a href="{{ router()->getCurrentUrl() }}">Home</a></li>
+        <ul class="left">
+            <li><a href="{{ router()->getCurrentUrl() }}">Regels</a></li>
 
             @if (Auth::isLoggedIn())
                 @if (Auth::isAdmin())
-                    <li><a href="{{ router()->getCurrentUrl() }}/Admin/ManageGames">Mangage Games</a></li>
-                    <li><a href="{{ router()->getCurrentUrl() }}/Admin/Statistics">Statistics</a></li>
-                    <li><a href="{{ router()->getCurrentUrl() }}/Admin/LogoutGET">Logout</a></li>
+                    <li><a href="{{ router()->getCurrentUrl() }}/Admin/ManageGames">Spellen beheren</a></li>
+                    <li><a href="{{ router()->getCurrentUrl() }}/Admin/Statistics">Statistieken</a></li>
                 @else
-                    <li><a href="{{ router()->getCurrentUrl() }}/User/Signup">Signup</a></li>
-                    <li><a href="{{ router()->getCurrentUrl() }}/User/Statistics">Statistics</a></li>
-                    <li><a href="{{ router()->getCurrentUrl() }}/User/LogoutGET">Logout</a></li>
+                    <li><a href="{{ router()->getCurrentUrl() }}/User/Signup">Aanmelden voor spel</a></li>
+                    <li><a href="{{ router()->getCurrentUrl() }}/User/Statistics">Statistieken</a></li>
                 @endif
             @else
-                <li><a href="{{ router()->getCurrentUrl() }}/Home/Login">Login</a></li>
+                <li><a href="{{ router()->getCurrentUrl() }}/Home/Login">Inloggen</a></li>
             @endif
 
-            <li><a href="{{ router()->getCurrentUrl() }}/Home/ActiveGame">Active Game</a></li>
+            
+        </ul>
+
+        <ul class="right">
+            @if (Auth::isLoggedIn())
+                @if (Auth::isAdmin())
+                    <li><a href="{{ router()->getCurrentUrl() }}/Admin/LogoutGET">Uitloggen</a></li>
+                @else
+                    <li><a href="{{ router()->getCurrentUrl() }}/User/LogoutGET">Uitloggen</a></li>
+                @endif
+
+                <li><a href="{{ router()->getCurrentUrl() }}/Home/ActiveGame">Actieve spel</a></li>
+            @endif
         </ul>
 	</div>
 </nav>
