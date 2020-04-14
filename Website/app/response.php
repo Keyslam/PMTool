@@ -21,10 +21,10 @@ class Response
 		return Response::create(true, 200, $fields);
 	}
 
-	public static function fail($notify = true, $fields = [])
+	public static function fail($silent = true, $fields = [])
 	{
 		return Response::create(false, 200, array_merge([
-			"notify" => $notify,
+			"silent" => $silent,
 		], $fields));
 	}
 

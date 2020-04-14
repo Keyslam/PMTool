@@ -8,6 +8,7 @@ let commands = {
   "userSignup": userSignup, 
   "userSignout": userSignout,
   "settingsChanged": settingsChanged,
+  "userChanged": userChanged,
 }
 
 function heartbeat() {
@@ -88,5 +89,11 @@ function userSignout(ws, data) {
 function settingsChanged(ws, data) {
   broadcast(JSON.stringify({
     "command": "settingsChanged",
+  }))
+}
+
+function userChanged(ws, data) {
+  broadcast(JSON.stringify({
+    "command": "userChanged",
   }))
 }

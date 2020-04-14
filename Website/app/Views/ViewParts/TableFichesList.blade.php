@@ -1,7 +1,9 @@
-// TODO
-<label for="playerlist">Spelers</label>
-        <ul class="collection" id="playerlist">
-            @foreach ($players as $player)
-            <li class="collection-item"> {{ $player["UserName"] }} </li>
-            @endforeach
-        </ul>
+<label for="ficheslist">Fiches</label>
+<ul class="collection" id="ficheslist">
+	@foreach ($chipsList as $chip=>$value)
+		<li class="collection-item">
+			<b>{{ $chip }}: </b>
+			{{ $value }}
+		</li>
+	@endforeach
+</ul>

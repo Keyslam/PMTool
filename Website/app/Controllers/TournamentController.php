@@ -268,7 +268,7 @@ class TournamentController
 				asort($settings["chipsList"]);
 				ksort($settings["potDivision"]);
 			} {
-				$stmt = DB::Connection()->prepare("SELECT ID, UserName FROM User WHERE ID IN (SELECT UserID FROM GameStatistics WHERE TournamentID = :id)");
+				$stmt = DB::Connection()->prepare("SELECT ID, UserName, HasRebought FROM User INNER JOIN GameStatistics ON UserID=ID WHERE TournamentID=tournamentID");
 				$stmt->bindValue(":id", $id);
 				$stmt->execute();
 
