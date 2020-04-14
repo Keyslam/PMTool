@@ -56,6 +56,7 @@
 
 			function serverSuccess(callback) {
 				return function(response) {
+					console.log(response)
 					if (response.success) {
 						callback(response);
 					} else {
